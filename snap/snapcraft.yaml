@@ -1,0 +1,46 @@
+name: imagecomparer # you probably want to 'snapcraft register <name>'
+version: '0.1' # just for humans, typically '1.2+git' or '1.3.2'
+summary: Image viewer for comparing two images or two image series. 
+description: Image viewer for comparing two images or two image series. |
+
+grade: stable # must be 'stable' to release into candidate/stable channels
+confinement: strict # use 'strict' once you have the right plugs and slots
+
+apps:
+    image-comparer:
+        command: desktop-launch imagecomparer
+        plugs:
+            - opengl
+            - hardware-observe
+            - x11
+            - home
+            - network
+
+parts:
+
+    imagecomparer:
+        plugin: cmake
+        build-packages:
+            - libpng-dev
+            - libqt5svg5-dev
+            - libomp-dev
+            - zlib1g-dev
+            - libqt5opengl5-dev
+            - libeigen3-dev
+            - libqt5widgets5
+            - libqt5core5a
+            - libgraphite2-dev
+            - freeglut3-dev
+            - libx11-dev
+            - libxmu-dev
+            - libxi-dev
+            - libgl1-mesa-glx
+            - libglu1-mesa
+            - libglu1-mesa-dev
+            - libglfw3-dev
+            - libgles2-mesa-dev
+            - libqt5printsupport5
+
+        after: 
+            - desktop-qt5
+

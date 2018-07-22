@@ -1,0 +1,12 @@
+[submodule "qcommandpalette"]
+	path = qcommandpalette
+	url = https://bitbucket.org/theHamsta/qcommandpalette.git
+[submodule "imagecomparer/TinyTIFF"]
+	path = imagecomparer/TinyTIFF
+	url = https://github.com/jkriege2/TinyTIFF.git
+[submodule "TinyTIFF"]
+	path = TinyTIFF
+	url = https://github.com/jkriege2/TinyTIFF.git
+[submodule "QCommandPalette"]
+	path = QCommandPalette
+	url = git@github.com:theHamsta/QCommandPalette.git
