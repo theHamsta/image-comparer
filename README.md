@@ -1,3 +1,5 @@
+[![Snap Status](https://build.snapcraft.io/badge/theHamsta/image-comparer.svg)](https://build.snapcraft.io/user/theHamsta/image-comparer)
+
 # Image Comparer
 
 TODO
