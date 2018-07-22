@@ -22,6 +22,7 @@ parts:
         plugin: cmake
         build-packages:
             - libpng-dev
+            - libopencv-dev
             - libqt5svg5-dev
             - libomp-dev
             - zlib1g-dev
