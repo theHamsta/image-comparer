@@ -24,6 +24,7 @@ parts:
             - libpng-dev
             - libopencv-dev
             - libqt5svg5-dev
+            - libboost-all-dev
             - libomp-dev
             - zlib1g-dev
             - libqt5opengl5-dev
