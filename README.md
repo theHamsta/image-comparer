@@ -1,4 +1,4 @@
-# CUDA Super Resolution
+# Image Comparer
 CUDA Super Resolution is a GPU-accelerated demonstrator for Super Resolution using non-uniform interpolation. It can be used as a command-line program or with an optional GUI (graphical user interface).
 
 ## Requirements
@@ -98,15 +98,8 @@ See documentation of GUI (-> Build instructions).
 Webcam parameters (e.g. auto focus) can be changed in real-time on Linux using the programs qv4l2 or v4l2ucp (accessible via `Settings`->`Wecam Settings`)
  
 ## Third-party software included in this project
-- cotire.cmake (compile time reducer): https://github.com/sakra/cotire#cotire
-- gDel2D: http://www.comp.nus.edu.sg/~tants/gdel3d.html
-- helper_math.h form CUDA Toolkit (is part of the samples: `samples/matrixMul/common/inc/helper_math.h`)
-- CUDA BM3d: https://github.com/DawyD/bm3d-gpu
-- FindFFMPEG.cmake: https://github.com/robotology/ycm/blob/master/find-modules/FindFFMPEG.cmake
 - Breeze icon theme: https://github.com/KDE/breeze-icons
 - QProgressIndicator: https://github.com/mojocorp/QProgressIndicator
-- QDarkStyleSheet: https://github.com/ColinDuquesnoy/QDarkStyleSheet
 - TinyTiff: https://github.com/jkriege2/TinyTIFF.git
-The documentation can also be built if doxygen is installed, with nice graphs (requires graphviz). Activate the switch `WITH_DOCUMENTATION` in the top-level `CMakeLists.txt`.
 
 See the above files for full license information.
