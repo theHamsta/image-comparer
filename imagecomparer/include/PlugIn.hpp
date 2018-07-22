@@ -9,7 +9,6 @@
 #ifndef PLUGIN_HPP
 #define PLUGIN_HPP
 
-#include <boost/python.hpp>
 
 #include <string>
 #include <QList>
@@ -18,33 +17,33 @@
 
 namespace ImageComparer
 {
-class MainWindow;
+	class MainWindow;
 }
 
 class PlugIn
 {
-public:
-	PlugIn( ImageComparer::MainWindow* imagecomparer );
-	PlugIn( PlugIn && ) = default;
-	PlugIn( const PlugIn& ) = default;
-	PlugIn& operator=( PlugIn && ) = default;
+	public:
+		PlugIn( ImageComparer::MainWindow* imagecomparer );
+		PlugIn( PlugIn&& ) = default;
+		PlugIn( const PlugIn& ) = default;
+		PlugIn& operator=( PlugIn&& ) = default;
 
-	virtual ~PlugIn();
+		virtual ~PlugIn();
 
-	virtual const std::string name() const = 0;
-	virtual const std::string description() const = 0;
-	
-	virtual QList<QAction*> actionsLeft() { return QList<QAction*>(); };
-	virtual QList<QAction*> actionsRight() { return QList<QAction*>(); };
-	virtual QList<QAction*> actionsBoth() { return QList<QAction*>(); };
-	virtual QList<QAction*> actionsNotInMenu() { return QList<QAction*>(); };
-	virtual std::function<QList<QAction*>( const QString& )> dynamicActions()
+		virtual const std::string name() const = 0;
+		virtual const std::string description() const = 0;
+
+		virtual QList<QAction*> actionsLeft() { return QList<QAction*>(); };
+		virtual QList<QAction*> actionsRight() { return QList<QAction*>(); };
+		virtual QList<QAction*> actionsBoth() { return QList<QAction*>(); };
+		virtual QList<QAction*> actionsNotInMenu() { return QList<QAction*>(); };
+		virtual std::function<QList<QAction*>( const QString& )> dynamicActions()
 		{ return []( const QString& ) { return QList<QAction*>(); }; }
 
 
 
-protected:
-	ImageComparer::MainWindow* m_imagecomparer = nullptr;
+	protected:
+		ImageComparer::MainWindow* m_imagecomparer = nullptr;
 
 };
 
