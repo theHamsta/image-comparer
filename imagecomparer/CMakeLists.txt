@@ -62,12 +62,7 @@ target_link_libraries(imagecomparerlib
 add_executable(imagecomparer main.cpp)
 
 target_link_libraries( imagecomparer imagecomparerlib )
-# 	${OPENGL_LIBRARIES}
-# 	${OpenCV_LIBS}
-# 	${Qt5Widgets_LIBRARIES}
-#     ${Qt5Widgets_LIBRARIES} 
-#     ${PYTHON_LIBRARIES}
-# 	${Boost_LIBRARIES} 
-# 	opencvmatviewer
-# 	pthread
-# )
+
+
+install(TARGETS imagecomparer DESTINATION bin)
+install(TARGETS imagecomparer.desktop DESTINATION share/applications)
