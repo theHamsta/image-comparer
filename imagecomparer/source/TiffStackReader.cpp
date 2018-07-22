@@ -3,7 +3,6 @@
 
 #include <iostream>
 
-#ifdef WITH_TIFF_FLOAT32
 #include <assert.h>
 
 
@@ -13,8 +12,7 @@ TiffStackReader::TiffStackReader( std::string fileName, bool keepAllFramesInRam 
 
 	if ( !fileName.empty() ) {
 		openTiff( fileName );
-	}
-	else {
+	} else {
 		assert( !keepAllFramesInRam && "Can only be set if filename is not empty" );
 	}
 }
@@ -26,7 +24,7 @@ TiffStackReader::~TiffStackReader()
 
 void TiffStackReader::openTiff( std::string fileName, bool keepBrightnessAndContrastSettings )
 {
-	closeTiff(keepBrightnessAndContrastSettings);
+	closeTiff( keepBrightnessAndContrastSettings );
 	m_fileName = fileName;
 	m_file = TinyTIFFReader_open( fileName.c_str() );
 
@@ -50,8 +48,7 @@ void TiffStackReader::openTiff( std::string fileName, bool keepBrightnessAndCont
 			}
 		}
 
-	}
-	else {
+	} else {
 		readCurrentFrame();
 	}
 }
@@ -76,12 +73,14 @@ void TiffStackReader::closeTiff( bool keepBrightnessAndContrastSettings )
 
 	m_bufferSizeCurrentFrame  = 0;
 	m_isOk = true;
-	if (!keepBrightnessAndContrastSettings) {
+
+	if ( !keepBrightnessAndContrastSettings ) {
 		m_min = 0.f;
 		m_max = 1.f;
 	}
-    m_currentIdx = 0;
-    m_numFrames = 0;
+
+	m_currentIdx = 0;
+	m_numFrames = 0;
 }
 
 
@@ -106,8 +105,7 @@ void TiffStackReader::readCurrentFrame( cv::Mat* dstMat )
 {
 	if ( dstMat ) {
 		assert( m_keepAllFramesInRam );
-	}
-	else {
+	} else {
 		assert( !m_keepAllFramesInRam );
 		dstMat = &m_mat;
 	}
@@ -117,8 +115,7 @@ void TiffStackReader::readCurrentFrame( cv::Mat* dstMat )
 
 	if ( width > 0 && height > 0 ) {
 		m_isOk = true;
-	}
-	else {
+	} else {
 		m_isOk = false;
 	}
 
@@ -134,13 +131,11 @@ void TiffStackReader::readCurrentFrame( cv::Mat* dstMat )
 		if ( sampleFormat == TINYTIFFREADER_SAMPLEFORMAT_FLOAT && bitsPerSample == 32 ) {
 			newBufferSize = numChannels * width * height * sizeof( float );
 			cvType = CV_MAKETYPE( CV_32F, numChannels );
-		}
-		else if ( sampleFormat ==  TINYTIFFREADER_SAMPLEFORMAT_UINT ) {
+		} else if ( sampleFormat ==  TINYTIFFREADER_SAMPLEFORMAT_UINT ) {
 			if ( bitsPerSample == 16 ) {
 				newBufferSize = numChannels * width * height * ( 16 / 8 );
 				cvType = CV_MAKETYPE( CV_16U, numChannels );
-			}
-			else if ( bitsPerSample == 8 ) {
+			} else if ( bitsPerSample == 8 ) {
 				newBufferSize = numChannels * width * height * ( 8 / 8 );
 				cvType = CV_MAKETYPE( CV_8U, numChannels );
 			}
@@ -157,8 +152,7 @@ void TiffStackReader::readCurrentFrame( cv::Mat* dstMat )
 		if ( m_keepAllFramesInRam ) {
 			mem = malloc( newBufferSize );
 			m_memAllFrames.push_back( mem );
-		}
-		else {
+		} else {
 
 			if ( newBufferSize > m_bufferSizeCurrentFrame ) {
 				free( m_dataCurrrentFrame );
@@ -178,14 +172,12 @@ void TiffStackReader::readCurrentFrame( cv::Mat* dstMat )
 
 		if ( mem ) {
 			*dstMat = cv::Mat( height, width, cvType, mem );
-		}
-		else {
+		} else {
 
 			m_isOk = false;
 			throw std::bad_alloc();
 		}
-	}
-	else {
+	} else {
 		*dstMat = cv::Mat();
 	}
 }
@@ -196,25 +188,24 @@ cv::Mat TiffStackReader::currentFrame()
 
 	if ( m_keepAllFramesInRam ) {
 		rtn = m_allFrames[m_currentIdx];
-	}
-	else {
+	} else {
 		rtn = m_mat;
 	}
 
 	if ( m_min == 0.f && m_max == 1.f ) {
 		return rtn;
-	}
-	else {
+	} else {
 		float diff = m_max - m_min;
+
 		if ( m_doBrightnessAdjustmentGpu ) {
-			m_matGpu.upload(m_mat);
-            cv::cuda::subtract(m_matGpu, cv::Scalar(m_min), m_matGpu);
-            cv::cuda::multiply( m_matGpu, cv::Scalar(1/diff), m_matGpu);
-			m_matGpu.download(m_rtnModified);
-		}
-		else {
+			m_matGpu.upload( m_mat );
+			cv::cuda::subtract( m_matGpu, cv::Scalar( m_min ), m_matGpu );
+			cv::cuda::multiply( m_matGpu, cv::Scalar( 1 / diff ), m_matGpu );
+			m_matGpu.download( m_rtnModified );
+		} else {
 			m_rtnModified = ( rtn - m_min ) / diff;
 		}
+
 		return m_rtnModified;
 	}
 }
@@ -234,8 +225,7 @@ void TiffStackReader::goToFrame( uint idx )
 
 	if ( idx == m_currentIdx ) {
 		return;
-	}
-	else {
+	} else {
 		if ( idx < m_currentIdx )  {
 			TinyTIFFReader_close( m_file );
 
@@ -303,8 +293,7 @@ void TiffStackReader::adjustBrightness()
 
 	if ( m_keepAllFramesInRam ) {
 		cv::minMaxLoc( m_allFrames[m_currentIdx],  &min,  &max );
-	}
-	else {
+	} else {
 		cv::minMaxLoc( m_mat,  &min,  &max );
 	}
 
@@ -339,4 +328,3 @@ void TiffStackReader::setKeepAllFramesInRam( bool inRam )
 
 
 
-#endif

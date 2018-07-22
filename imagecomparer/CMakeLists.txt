@@ -19,9 +19,9 @@ include_directories(${PYTHON_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 
 
 include_directories(
-    ${CMAKE_CURRENT_SOURCE_DIR}/../TinyTiff/
+    ${CMAKE_CURRENT_SOURCE_DIR}/../TinyTIFF/
     ${CMAKE_CURRENT_SOURCE_DIR}/../opencvmatviewer/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/../QCommandPallette/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/../QCommandPalette/include
     ${CMAKE_CURRENT_SOURCE_DIR}/include/
     ${CMAKE_CURRENT_BINARY_DIR}
     ${Qt5Widgets_INCLUDE_DIRS}
@@ -38,11 +38,36 @@ file(GLOB UI_INCLUDES RELATIVE  "${CMAKE_CURRENT_SOURCE_DIR}" ${CMAKE_CURRENT_SO
 qt5_wrap_cpp(MOC_SRC ${UI_INCLUDES})
 qt5_wrap_ui(MOC_UI ${UI})
 
-add_library( imagecomparer
+link_directories(${CMAKE_CURRENT_BINARY_DIR}/../opencvmatviewer)
+
+add_library( imagecomparerlib
 		${SOURCES}
 		${TINYTIFF_SOURCES}
 		${MOC_SRC}
 		${UI}
 		${UI_INCLUDES}
 		)
-target_link_libraries(imagecomparer ${Qt5Widgets_LIBRARIES})
+target_link_libraries(imagecomparerlib
+	${OPENGL_LIBRARIES}
+	${OpenCV_LIBS}
+	${Qt5Widgets_LIBRARIES}
+    ${Qt5Widgets_LIBRARIES} 
+    ${PYTHON_LIBRARIES}
+	${Boost_LIBRARIES} 
+	opencvmatviewer
+	qcommandpalette
+	pthread
+	)
+
+add_executable(imagecomparer main.cpp)
+
+target_link_libraries( imagecomparer imagecomparerlib )
+# 	${OPENGL_LIBRARIES}
+# 	${OpenCV_LIBS}
+# 	${Qt5Widgets_LIBRARIES}
+#     ${Qt5Widgets_LIBRARIES} 
+#     ${PYTHON_LIBRARIES}
+# 	${Boost_LIBRARIES} 
+# 	opencvmatviewer
+# 	pthread
+# )

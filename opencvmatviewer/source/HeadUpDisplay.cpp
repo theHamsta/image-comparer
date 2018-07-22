@@ -64,10 +64,7 @@ HeadUpDisplay::HeadUpDisplay( QWidget* parent ) :
 	// Activate mouse tracking (fade cursor and slider in and out)
 	setMouseTracking( true );
 	m_timerSliderFadeOut.start(); // ok, if user doesn't move the mouse, fade out slider and mouse
-	
-	ui->commandPalette->hide();
-	ui->commandPalette->removeShortcut();
-	connect( commandPalette(), &AbstractCommandPaletteWidget::userInteractionFinished, this, [&]() { ui->commandPalette->hide(); } );
+
 }
 
 HeadUpDisplay::~HeadUpDisplay()
@@ -131,17 +128,17 @@ void HeadUpDisplay::on_slider_sliderPressed()
 void HeadUpDisplay::setProgess( int percentage, QString currentStep )
 {
 	m_timerProgressBarFadeOut.stop();
-	
+
 	// Show busy indicatior if percentage is greater 100
 	ui->progressBar->setMaximum( percentage > 100 ? 0 : 100 );
-	
+
 	ui->progressBar->setValue( percentage > 100 ? 0 : percentage );
 	ui->progressBar->setVisible( true );
 	ui->progressBarSpacer->changeSize( 40, 20, QSizePolicy::Expanding );
 
 	if ( !currentStep.isEmpty() ) {
-//         ui->labelCurrentStep->setVisible( true );
-//         ui->labelCurrentStep->setText( currentStep );
+		//         ui->labelCurrentStep->setVisible( true );
+		//         ui->labelCurrentStep->setText( currentStep );
 	}
 
 	if ( percentage == 100 ) {
@@ -169,7 +166,7 @@ void HeadUpDisplay::hideSliderUntilMouseMove()
 		connect( a, &QPropertyAnimation::finished, [ = ]() {
 			ui->slider->hide();
 		} );
-// 		ui->labelInfoBox->hide();
+		// 		ui->labelInfoBox->hide();
 	}
 }
 
@@ -208,13 +205,13 @@ void HeadUpDisplay::showLabelMessage()
 	a->setEasingCurve( QEasingCurve::InBack );
 	a->start( QPropertyAnimation::DeleteWhenStopped );
 
-// 	QPropertyAnimation* a = new QPropertyAnimation( ui->labelMessages, "pos" );
-// 	a->setDuration( m_animationDuration);
-// 	a->setStartValue( QPoint( -ui->labelMessages->width(), ui->labelMessages->pos().y() ) );
-// 	a->setEndValue( ui->labelMessages->pos() );
-// 	a->setEasingCurve( QEasingCurve::InBack );
-// 	a->start( QPropertyAnimation::DeleteWhenStopped );
-// 	ui->labelMessages->show();
+	// 	QPropertyAnimation* a = new QPropertyAnimation( ui->labelMessages, "pos" );
+	// 	a->setDuration( m_animationDuration);
+	// 	a->setStartValue( QPoint( -ui->labelMessages->width(), ui->labelMessages->pos().y() ) );
+	// 	a->setEndValue( ui->labelMessages->pos() );
+	// 	a->setEasingCurve( QEasingCurve::InBack );
+	// 	a->start( QPropertyAnimation::DeleteWhenStopped );
+	// 	ui->labelMessages->show();
 
 
 }
@@ -243,18 +240,18 @@ void HeadUpDisplay::setOpacityRightLabel( double value )
 
 void HeadUpDisplay::showPleaseWaitMessage( QString message )
 {
-// 	if ( !message.isEmpty() ) {
-// 		ui->labelPleaseWait->show();
-// 		ui->labelPleaseWait->setText( message );
-// 		QPropertyAnimation* a = new QPropertyAnimation( m_opacityEffectPleaseWait, "opacity" );
-// 		a->setDuration( m_animationDuration );
-// 		a->setStartValue( m_opacityEffectPleaseWait->opacity() );
-// 		a->setEndValue( 1. );
-// 		a->setEasingCurve( QEasingCurve::InBack );
-// 		a->start( QPropertyAnimation::DeleteWhenStopped );
-// 	} else {
-// 		ui->labelPleaseWait->hide();
-// 	}
+	// 	if ( !message.isEmpty() ) {
+	// 		ui->labelPleaseWait->show();
+	// 		ui->labelPleaseWait->setText( message );
+	// 		QPropertyAnimation* a = new QPropertyAnimation( m_opacityEffectPleaseWait, "opacity" );
+	// 		a->setDuration( m_animationDuration );
+	// 		a->setStartValue( m_opacityEffectPleaseWait->opacity() );
+	// 		a->setEndValue( 1. );
+	// 		a->setEasingCurve( QEasingCurve::InBack );
+	// 		a->start( QPropertyAnimation::DeleteWhenStopped );
+	// 	} else {
+	// 		ui->labelPleaseWait->hide();
+	// 	}
 	showPermanentMessage( message );
 	ui->spinningWheelWidget->startAnimation();
 }
@@ -277,14 +274,14 @@ void HeadUpDisplay::hidePleaseWaitMessage()
 	a->setEasingCurve( QEasingCurve::InBack );
 	a->start( QPropertyAnimation::DeleteWhenStopped );
 	ui->spinningWheelWidget->stopAnimation();
-// 	ui->labelPleaseWait->hide();
+	// 	ui->labelPleaseWait->hide();
 }
 
 void HeadUpDisplay::hideProgressBar()
 {
 	ui->progressBar->hide();
 	ui->progressBarSpacer->changeSize( 0, 0 );
-//     ui->labelCurrentStep->hide();
+	//     ui->labelCurrentStep->hide();
 }
 
 void HeadUpDisplay::mouseMoveEvent( QMouseEvent* event )
@@ -304,11 +301,12 @@ void HeadUpDisplay::mouseMoveEvent( QMouseEvent* event )
 
 void HeadUpDisplay::showInfoBox( QString text )
 {
-    if( text.isEmpty() ) {
-        hideInfoBox();
-        return;
-    }
-	ui->spacerInfoBox->changeSize( 40, 20 , QSizePolicy::Expanding );
+	if ( text.isEmpty() ) {
+		hideInfoBox();
+		return;
+	}
+
+	ui->spacerInfoBox->changeSize( 40, 20, QSizePolicy::Expanding );
 	ui->labelInfoBox->show();
 	ui->labelInfoBox->setText( text );
 	m_showInfoBox = true;
@@ -335,7 +333,7 @@ void HeadUpDisplay::showButtonQuitCalculations()
 void HeadUpDisplay::on_buttonQuitCalculation_clicked()
 {
 	hideButtonQuitCalculations();
-    hideProgressBar();
+	hideProgressBar();
 	emit buttonQuitCalculation_clicked();
 }
 
@@ -355,7 +353,3 @@ void HeadUpDisplay::hideSettingsButton()
 	ui->btnPopupSettings->hide();
 }
 
-AbstractCommandPaletteWidget* HeadUpDisplay::commandPalette()
-{
-	return ui->commandPalette;
-}

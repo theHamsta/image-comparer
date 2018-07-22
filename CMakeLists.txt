@@ -17,8 +17,9 @@ if( NOT DOXYGEN_FOUND)
 	set (WITH_DOCUMENTATION OFF )
 endif()
 
+add_subdirectory(opencvmatviewer)
 add_subdirectory(imagecomparer)
-add_subdirectory( QCommandPalette )
+add_subdirectory(QCommandPalette)
 
 install( FILES ${CMAKE_CURRENT_SOURCE_DIR}/README.md DESTINATION doc )
 

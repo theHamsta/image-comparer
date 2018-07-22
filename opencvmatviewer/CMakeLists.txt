@@ -28,7 +28,7 @@ file(GLOB UI_INCLUDES RELATIVE  "${CMAKE_CURRENT_SOURCE_DIR}" ${CMAKE_CURRENT_SO
 qt5_wrap_cpp(MOC_SRC ${UI_INCLUDES})
 qt5_wrap_ui(MOC_UI ${UI})
 
-add_library( opencvmatviewer
+add_library( opencvmatviewer SHARED
 		${SOURCES}
 		${MOC_SRC}
 		${UI}

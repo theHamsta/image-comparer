@@ -28,8 +28,7 @@ void PythonIntegration::import_path( const boost::filesystem::path& path )
 		if ( is_regular_file( it->path() ) && it->path().extension().string() == ".py" ) {
 			try {
 				import_module( it->path() );
-			}
-			catch ( std::exception& e ) {
+			} catch ( std::exception& e ) {
 				std::cerr << e.what() << std::endl;
 			}
 		}
@@ -39,22 +38,22 @@ void PythonIntegration::import_path( const boost::filesystem::path& path )
 
 void PythonIntegration::import_module( const boost::filesystem::path& pythonFile )
 {
-	if ( !is_regular_file( pythonFile ) ) {
-		std::runtime_error( "Cannot access \"" + pythonFile.string() + "\"" );
-	}
+	// 	if ( !is_regular_file( pythonFile ) ) {
+	// 		std::runtime_error( "Cannot access \"" + pythonFile.string() + "\"" );
+	// 	}
 
-	std::string moduleName = pythonFile.stem().string();
+	// 	std::string moduleName = pythonFile.stem().string();
 
-	try {
-		exec( str( "import sys\r\nsys.path.append('" + pythonFile.parent_path().string() + "')\r\n" ), m_mainNamespace );
+	// 	try {
+	// 		exec( str( "import sys\r\nsys.path.append('" + pythonFile.parent_path().string() + "')\r\n" ), m_mainNamespace );
 
-		object module = import( str( moduleName ) );
-// 		m_objects.push_back(extract<object>(m_mainNamespace.attr("__dict__.['obj']")));
-		m_modules.push_back( module );
-	}
-	catch ( error_already_set ) {
-		throw std::runtime_error( "Failed to import module \"" + moduleName + "\" (" + pythonFile.parent_path().string() + ")" );
-	}
+	// 		object module = import( str( moduleName ) );
+	// // 		m_objects.push_back(extract<object>(m_mainNamespace.attr("__dict__.['obj']")));
+	// 		m_modules.push_back( module );
+	// 	}
+	// 	catch ( error_already_set ) {
+	// 		throw std::runtime_error( "Failed to import module \"" + moduleName + "\" (" + pythonFile.parent_path().string() + ")" );
+	// 	}
 }
 
 void PythonIntegration::exec_commands( const std::string& commands )
