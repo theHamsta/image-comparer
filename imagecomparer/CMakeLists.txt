@@ -16,6 +16,7 @@ find_package( Boost REQUIRED filesystem system python )
 
 add_definitions("-DWITH_PYTHON")
 include_directories(${PYTHON_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
+set(CMAKE_AUTORCC ON)
 
 
 include_directories(
@@ -46,6 +47,7 @@ add_library( imagecomparerlib
 		${MOC_SRC}
 		${UI}
 		${UI_INCLUDES}
+		${CMAKE_CURRENT_SOURCE_DIR}/icons.qrc
 		)
 target_link_libraries(imagecomparerlib
 	${OPENGL_LIBRARIES}
