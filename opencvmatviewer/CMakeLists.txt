@@ -34,4 +34,7 @@ add_library( opencvmatviewer STATIC
 		${UI}
 		${UI_INCLUDES}
 		)
-target_link_libraries(opencvmatviewer ${Qt5Widgets_LIBRARIES})
+target_link_libraries(opencvmatviewer ${Qt6Widgets_LIBRARIES} ${OpenCV_LIBS} ${OPENGL_LIBRARIES})
+install ( TARGETS opencvmatviewer LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
+
+

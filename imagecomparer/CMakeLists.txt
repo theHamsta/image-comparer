@@ -50,7 +50,6 @@ add_library( imagecomparerlib
 target_link_libraries(imagecomparerlib
 	${OPENGL_LIBRARIES}
 	${OpenCV_LIBS}
-	${Qt5Widgets_LIBRARIES}
     ${Qt5Widgets_LIBRARIES} 
     ${PYTHON_LIBRARIES}
 	${Boost_LIBRARIES} 
