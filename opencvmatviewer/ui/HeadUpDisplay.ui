@@ -48,8 +48,6 @@
                                                 </spacer>
                                         </item>
                                         <item>
-                                        </item>
-                                        <item>
                                                 <spacer name="horizontalSpacer_6">
                                                         <property name="orientation">
                                                                 <enum>Qt::Horizontal</enum>
