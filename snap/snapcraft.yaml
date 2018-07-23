@@ -20,6 +20,10 @@ parts:
 
     imagecomparer:
         plugin: cmake
+        prepare: |
+            git submodule init
+            git submodule update
+
         build-packages:
             - libpng-dev
             - libopencv-dev
