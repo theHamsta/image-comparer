@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 project( superresolution )
 
-find_package( OpenCV 2.0 REQUIRED)
-
 # default: release
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Release" CACHE STRING
