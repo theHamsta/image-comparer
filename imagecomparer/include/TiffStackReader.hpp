@@ -56,7 +56,6 @@ class TiffStackReader
 		void* m_dataCurrrentFrame = nullptr;                       ///< Buffer for currently opened frame in stack
 		uint m_bufferSizeCurrentFrame = 0;                         ///< Buffer size of currently opened frame in stack
 		cv::Mat m_mat;                                             ///< cv::Mat wrapping currently opened frame of stack
-		cv::cuda::GpuMat m_matGpu;                                 ///< cv::Mat wrapping currently opened frame of stack
 		cv::Mat m_rtnModified;                                     ///< cv::Mat to save temporary results
 		uint m_currentIdx = 0;                                     ///< Currently index in image stack
 		uint m_numFrames = 0;                                      ///< Number of images in Tiff file

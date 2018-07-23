@@ -197,14 +197,7 @@ cv::Mat TiffStackReader::currentFrame()
 	} else {
 		float diff = m_max - m_min;
 
-		if ( m_doBrightnessAdjustmentGpu ) {
-			m_matGpu.upload( m_mat );
-			cv::cuda::subtract( m_matGpu, cv::Scalar( m_min ), m_matGpu );
-			cv::cuda::multiply( m_matGpu, cv::Scalar( 1 / diff ), m_matGpu );
-			m_matGpu.download( m_rtnModified );
-		} else {
-			m_rtnModified = ( rtn - m_min ) / diff;
-		}
+		m_rtnModified = ( rtn - m_min ) / diff;
 
 		return m_rtnModified;
 	}
