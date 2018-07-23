@@ -46,6 +46,7 @@ parts:
             - libglfw3-dev
             - libgles2-mesa-dev
             - libqt5printsupport5
+            - libpython-dev
 
         after: 
             - desktop-qt5
