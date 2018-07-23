@@ -20,6 +20,8 @@ parts:
 
     imagecomparer:
         plugin: cmake
+        source: .
+        source-type: git
 
         build-packages:
             - libpng-dev
