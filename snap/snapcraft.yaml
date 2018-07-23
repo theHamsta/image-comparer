@@ -11,6 +11,7 @@ apps:
         command: desktop-launch imagecomparer
         plugs:
             - opengl
+            - desktop
             - hardware-observe
             - x11
             - wayland
