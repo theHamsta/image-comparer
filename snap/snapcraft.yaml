@@ -48,6 +48,7 @@ parts:
             - libqt5widgets5
             - libqt5core5a
             - libgraphite2-dev
+            - qtchooser
             - freeglut3-dev
             - libx11-dev
             - libxmu-dev
