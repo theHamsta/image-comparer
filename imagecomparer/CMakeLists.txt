@@ -65,4 +65,4 @@ target_link_libraries( imagecomparer imagecomparerlib )
 
 
 install(TARGETS imagecomparer DESTINATION bin)
-install(TARGETS imagecomparer.desktop DESTINATION share/applications)
+install(FILES imagecomparer.desktop DESTINATION share/applications)
