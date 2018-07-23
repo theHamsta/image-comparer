@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Encoding=UTF-8
+Name=Image Comparer
+Comment=An application to compare two images in different view modes
+Comment[de]=Programm zum Vergleichen von zwei Bilddateien
+Exec=imagecomparer %F
+Icon=image-viewer
+Categories=Graphics;
+Terminal=false
+MimeType=image/gif;image/jpeg;image/png;image/bmp;image/x-portable-bitmap;image/x-portable-pixmap;image/x-xbitmap;image/x-xpixmap;image/tiff;image/jp2
+X-Desktop-File-Install-Version=0.23
