@@ -9,4 +9,4 @@
 	url = https://github.com/jkriege2/TinyTIFF.git
 [submodule "QCommandPalette"]
 	path = QCommandPalette
-	url = git@github.com:theHamsta/QCommandPalette.git
+	url = https://github.com/theHamsta/QCommandPalette.git
