@@ -9,30 +9,30 @@ std::mutex g_mutex;
 
 PythonIntegration::PythonIntegration()
 {
-	Py_Initialize();
+	//Py_Initialize();
 
 
-	object main_module = import( "__main__" );
-	m_mainNamespace = main_module.attr( "__dict__" );
+	//object main_module = import( "__main__" );
+	//m_mainNamespace = main_module.attr( "__dict__" );
 }
 
 void PythonIntegration::import_path( const boost::filesystem::path& path )
 {
-	if ( !is_directory( path ) ) {
-		std::runtime_error( "Cannot access \"" + path.string() + "\"" );
-	}
+	//if ( !is_directory( path ) ) {
+		//std::runtime_error( "Cannot access \"" + path.string() + "\"" );
+	//}
 
-	directory_iterator eod;
+	//directory_iterator eod;
 
-	for ( directory_iterator it( path ); it != eod; ++it ) {
-		if ( is_regular_file( it->path() ) && it->path().extension().string() == ".py" ) {
-			try {
-				import_module( it->path() );
-			} catch ( std::exception& e ) {
-				std::cerr << e.what() << std::endl;
-			}
-		}
-	}
+	//for ( directory_iterator it( path ); it != eod; ++it ) {
+		//if ( is_regular_file( it->path() ) && it->path().extension().string() == ".py" ) {
+			//try {
+				//import_module( it->path() );
+			//} catch ( std::exception& e ) {
+				//std::cerr << e.what() << std::endl;
+			//}
+		//}
+	//}
 }
 
 
@@ -58,7 +58,7 @@ void PythonIntegration::import_module( const boost::filesystem::path& pythonFile
 
 void PythonIntegration::exec_commands( const std::string& commands )
 {
-	exec( str( commands.c_str() ), m_mainNamespace );
+	//exec( str( commands.c_str() ), m_mainNamespace );
 }
 std::mutex& PythonIntegration::mutex()
 {
