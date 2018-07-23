@@ -11,6 +11,7 @@
 #define PYTHONPLUGIN_HPP
 
 #include "PlugIn.hpp"
+#include <boost/python.hpp>
 
 namespace ImageComparer
 {

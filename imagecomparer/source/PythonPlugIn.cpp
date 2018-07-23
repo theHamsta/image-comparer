@@ -22,6 +22,7 @@ PythonPlugIn::PythonPlugIn(boost::python::object &module, ImageComparer::MainWin
 	catch (std::exception &e)
 	{
 		std::cerr << e.what() << std::endl;
+
 	}
 }
 

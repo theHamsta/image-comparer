@@ -18,10 +18,8 @@
 
 using namespace ImageComparer;
 
-#ifdef WITH_PYTHON
 #include "PythonIntegration.hpp"
 #include "PythonPlugIn.hpp"
-#endif
 
 #include <exception>
 
