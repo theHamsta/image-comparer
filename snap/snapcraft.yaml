@@ -12,6 +12,7 @@ apps:
         plugs:
             - opengl
             - desktop
+            - desktop-legacy
             - hardware-observe
             - x11
             - wayland
