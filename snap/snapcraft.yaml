@@ -63,4 +63,5 @@ parts:
 
         after: 
             - desktop-qt5
+            - qt5conf
 
