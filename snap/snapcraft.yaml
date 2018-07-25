@@ -60,7 +60,6 @@ parts:
             - libgles2-mesa-dev
             - libqt5printsupport5
             - libpython-dev
-            - libqt5svg5-dev
             - libqt5svg5
         stage-packages:
             # Here for the plugins-- they're not linked in automatically.
