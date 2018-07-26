@@ -6,6 +6,20 @@ description: Image viewer for comparing two images or two image series. |
 grade: stable # must be 'stable' to release into candidate/stable channels
 confinement: strict # use 'strict' once you have the right plugs and slots
 
+plugs:
+    gtk-3-themes:
+        interface: content
+        target: $SNAP/usr/share/themes
+        default-provider: gtk-common-themes
+    icon-themes:
+        interface: content
+        target: $SNAP/usr/share/icons
+        default-provider: gtk-common-themes
+    gnome-3-26-1604:
+        interface: content
+        content: gnome-3-26-1604
+        target: gnome-platform
+        default-provider: gnome-3-26-1604
 apps:
     imagecomparer:
         command: desktop-launch imagecomparer
@@ -18,16 +32,9 @@ apps:
             - wayland
             - home
             - network
+            - gnome-3-26-1604
+            - icon-themes
 
-plugs:
-    gtk-3-themes:
-        interface: content
-        target: $SNAP/usr/share/themes
-        default-provider: gtk-common-themes
-    icon-themes:
-        interface: content
-        target: $SNAP/usr/share/icons
-        default-provider: gtk-common-themes
 
 parts:
 
