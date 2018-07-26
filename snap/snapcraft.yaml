@@ -27,13 +27,13 @@ apps:
             - opengl
             - desktop
             - desktop-legacy
-            - hardware-observe
             - x11
             - wayland
             - home
             - network
             - gnome-3-26-1604
             - icon-themes
+            - gsettings
 
 parts:
 
@@ -83,6 +83,8 @@ parts:
             - desktop-qt5
             - qt5conf
             - qt5
+            - desktop-gnome-platform
+            - gnome-platform
 
     qt5:
          source: git://github.com/ubuntu/snapcraft-desktop-helpers
