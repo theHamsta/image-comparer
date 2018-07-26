@@ -78,4 +78,13 @@ parts:
         after: 
             - desktop-qt5
             - qt5conf
+            - qt5
+     qt5:
+         source: git://github.com/ubuntu/snapcraft-desktop-helpers
+         source-subdir: qt
+         make-parameters: ["FLAVOR=qt5"]
+         plugin: make
+         build-packages:
+             - qtbase5-dev
+             - dpkg-dev
 
