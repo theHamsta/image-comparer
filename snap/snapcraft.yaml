@@ -9,17 +9,12 @@ confinement: strict # use 'strict' once you have the right plugs and slots
 plugs:
     gtk-3-themes:
         interface: content
-        target: $SNAP/usr/share/themes
+        target: $SNAP/share/themes
         default-provider: gtk-common-themes
     icon-themes:
         interface: content
-        target: $SNAP/usr/share/icons
+        target: $SNAP/share/icons
         default-provider: gtk-common-themes
-    gnome-3-26-1604:
-        interface: content
-        content: gnome-3-26-1604
-        target: gnome-platform
-        default-provider: gnome-3-26-1604
 apps:
     imagecomparer:
         command: desktop-launch imagecomparer
@@ -31,7 +26,6 @@ apps:
             - wayland
             - home
             - network
-            - gnome-3-26-1604
             - icon-themes
             - gsettings
 
