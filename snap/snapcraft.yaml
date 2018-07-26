@@ -61,11 +61,19 @@ parts:
             - libqt5printsupport5
             - libpython-dev
             - libqt5svg5
+            - qtbase5-dev
+            - dpkg-dev
         stage-packages:
             # Here for the plugins-- they're not linked in automatically.
+            - libxkbcommon0
+            - ttf-ubuntu-font-family
+            - dmz-cursor-theme
+            - light-themes
+            - shared-mime-info
             - libqt5gui5
-            - libqt5svg5
-            - libqt5svg5-dev
+            - libgdk-pixbuf2.0-0
+            - libqt5svg5 # for loading icon themes which are svg
+            - appmenu-qt5
 
         after: 
             - desktop-qt5
