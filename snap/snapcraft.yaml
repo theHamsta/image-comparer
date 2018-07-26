@@ -35,14 +35,12 @@ apps:
             - gnome-3-26-1604
             - icon-themes
 
-
 parts:
 
     imagecomparer:
         plugin: cmake
         source: .
         source-type: git
-
         build-packages:
             - libpng-dev
             - libopencv-dev
@@ -81,12 +79,12 @@ parts:
             - libgdk-pixbuf2.0-0
             - libqt5svg5 # for loading icon themes which are svg
             - appmenu-qt5
-
         after: 
             - desktop-qt5
             - qt5conf
             - qt5
-     qt5:
+
+    qt5:
          source: git://github.com/ubuntu/snapcraft-desktop-helpers
          source-subdir: qt
          make-parameters: ["FLAVOR=qt5"]
