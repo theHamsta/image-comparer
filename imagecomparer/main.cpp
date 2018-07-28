@@ -22,7 +22,7 @@
 
 int main( int argc, char* argv[] )
 {
-//     Q_INIT_RESOURCE(resources);
+	//     Q_INIT_RESOURCE(resources);
 #ifndef NDEBUG
 	// see http://doc.qt.io/qt-5/qtglobal.html#qSetMessagePattern for format
 	qSetMessagePattern( "[%{type}] (%{time}, thread: %{threadid}) %{message} (%{file}:%{line})" );
@@ -43,18 +43,17 @@ int main( int argc, char* argv[] )
 	parser.process( app );
 
 #ifdef DARK_THEME_IMAGECOMPARER
-	QFile f(":qdarkstyle/style.qss");
-	if (!f.exists())
-	{
-		printf("Unable to set stylesheet, file not found\n");
+	QFile f( ":qdarkstyle/style.qss" );
+
+	if ( !f.exists() ) {
+		printf( "Unable to set stylesheet, file not found\n" );
+	} else {
+		f.open( QFile::ReadOnly | QFile::Text );
+		QTextStream ts( &f );
+		qApp->setStyleSheet( ts.readAll() );
 	}
-	else
-	{
-		f.open(QFile::ReadOnly | QFile::Text);
-		QTextStream ts(&f);
-		qApp->setStyleSheet(ts.readAll());
-	}
-    QIcon::setThemeName( "breeze-dark" );
+
+	QIcon::setThemeName( "breeze-dark" );
 #endif
 
 	ImageComparer::MainWindow mainWin;
@@ -65,8 +64,7 @@ int main( int argc, char* argv[] )
 
 		if ( QFileInfo::exists( file ) ) {
 			mainWin.openFile( file, ImageComparer::LeftImage );
-		}
-		else {
+		} else {
 			QMessageBox msgBox;
 			msgBox.setText( QApplication::translate( "ImageComparerMain.cpp", "The file \"%1\" could not be found." ).arg( file ) );
 			msgBox.exec();
@@ -77,8 +75,7 @@ int main( int argc, char* argv[] )
 
 			if ( QFileInfo::exists( secondFile ) ) {
 				mainWin.openFile( secondFile, ImageComparer::RightImage );
-			}
-			else {
+			} else {
 				QMessageBox msgBox;
 				msgBox.setText( QApplication::translate( "ImageComparerMain.cpp", "The file \"%1\" could not be found." ).arg( secondFile ) );
 				msgBox.exec();

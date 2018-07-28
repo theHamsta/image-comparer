@@ -8,5 +8,6 @@ TODO
 - Breeze icon theme: https://github.com/KDE/breeze-icons
 - QProgressIndicator: https://github.com/mojocorp/QProgressIndicator
 - TinyTiff: https://github.com/jkriege2/TinyTIFF.git
+- QDarkStyleSheet: https://github.com/ColinDuquesnoy/QDarkStyleSheet
 
 See the above files for full license information.

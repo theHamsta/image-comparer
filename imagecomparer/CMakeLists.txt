@@ -61,8 +61,11 @@ target_link_libraries(imagecomparerlib
 	pthread
 	)
 
+add_definitions(-DDARK_THEME_IMAGECOMPARER)
 add_executable(imagecomparer main.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/icons.qrc )
+    iconsdark.qrc
+    qdarkstyle/style.qrc
+		 )
 
 target_link_libraries( imagecomparer imagecomparerlib )
 
