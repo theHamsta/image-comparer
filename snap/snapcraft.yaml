@@ -15,6 +15,12 @@ plugs:
         interface: content
         target: $SNAP/usr/share/icons
         default-provider: gtk-common-themes
+    python3:
+        interface: content
+        content: python3
+        target: python
+        default-provider: python36-jamesh
+
 apps:
     imagecomparer:
         command: desktop-launch imagecomparer
@@ -28,6 +34,7 @@ apps:
             - network
             - icon-themes
             - gsettings
+            - python3
 
 parts:
 
@@ -58,7 +65,8 @@ parts:
             - libglfw3-dev
             - libgles2-mesa-dev
             - libqt5printsupport5
-            - libpython3-dev
+            - libpython-dev
+            - python-dev
             - libqt5svg5
             - qtbase5-dev
             - dpkg-dev
@@ -92,5 +100,5 @@ parts:
     pythonpackages:
         plugin: python
         python-version: python3
-        python-packages: [matplotlib,numpy]
+        python-packages: [matplotlib,numpy, pydicom]
 

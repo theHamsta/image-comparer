@@ -24,7 +24,8 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/../QCommandPalette/include
     ${CMAKE_CURRENT_SOURCE_DIR}/../QCommandPalette/fuzzy-native/src
     ${CMAKE_CURRENT_SOURCE_DIR}/include/
-    ${CMAKE_CURRENT_BINARY_DIR}
+	${CMAKE_CURRENT_BINARY_DIR}
+	${PYTHON_INCLUDE_DIR}	
     ${Qt5Widgets_INCLUDE_DIRS}
     ${Qt5Core_INCLUDE_DIRS}
     ${Qt5Gui_INCLUDE_DIRS}
