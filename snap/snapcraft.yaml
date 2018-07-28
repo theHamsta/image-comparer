@@ -9,11 +9,11 @@ confinement: strict # use 'strict' once you have the right plugs and slots
 plugs:
     gtk-3-themes:
         interface: content
-        target: $SNAP/share/themes
+        target: $SNAP/usr/share/themes
         default-provider: gtk-common-themes
     icon-themes:
         interface: content
-        target: $SNAP/share/icons
+        target: $SNAP/usr/share/icons
         default-provider: gtk-common-themes
 apps:
     imagecomparer:

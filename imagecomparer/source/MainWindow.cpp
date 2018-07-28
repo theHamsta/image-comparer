@@ -1116,15 +1116,23 @@ void ImageComparer::MainWindow::updateFileInterators( ImageSide side )
 			m_leftImgFileList.clear();
 		}
 
+
+		// try {
 		m_leftFileMatcher.clear();
 
-		for ( auto& fileInfo : m_leftImgFileList ) {
-			m_leftFileMatcher.addCandidate( "Left: " + fileInfo.absoluteFilePath().toStdString() );
+		for ( auto& fileInfo : dir ) {
+			QString path ( fileInfo.absoluteFilePath() );
+			m_leftFileMatcher.addCandidate( "Left: " + path.toStdString() );
 
 			if ( m_rightImg.empty() ) {
-				m_rightFileMatcher.addCandidate( "Right: " + fileInfo.absoluteFilePath().toStdString() );
+				m_rightFileMatcher.addCandidate( "Right: " + path.toStdString() );
 			}
 		}
+
+		// } catch ( const std::exception& ) {
+
+
+		// }
 	} else {
 		if ( found ) {
 			m_rightImgFileList = dir;
@@ -1135,14 +1143,15 @@ void ImageComparer::MainWindow::updateFileInterators( ImageSide side )
 
 		m_rightFileMatcher.clear();
 
-		for ( auto& fileInfo : m_rightImgFileList ) {
+		for ( auto fileInfo : dir ) {
 			m_rightFileMatcher.addCandidate( "Right: " + fileInfo.absoluteFilePath().toStdString() );
 
 			if ( m_leftImg.empty() ) {
 				m_leftFileMatcher.addCandidate( "Left: " + fileInfo.absoluteFilePath().toStdString() );
 			}
 		}
-	}
 
+
+	}
 
 }
