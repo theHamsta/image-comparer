@@ -92,5 +92,5 @@ parts:
     pythonpackages:
         plugin: python
         python-version: python3
-        python-packages: [scikit-image,numpy]
+        python-packages: [matplotlib,numpy]
 
