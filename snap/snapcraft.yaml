@@ -77,7 +77,6 @@ parts:
             - desktop-qt5
             - qt5conf
             - qt5
-            - desktop-gnome-platform
 
 
     qt5:
