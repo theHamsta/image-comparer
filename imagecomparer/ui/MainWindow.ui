@@ -398,8 +398,8 @@
       </property>
     </action>
     <action name="actionSaveRightImage">
-      <property theme="document-save" name="icon">
-        <iconset resource="../gui/icons.qrc">
+      <property name="icon">
+        <iconset theme="document-save" resource="../gui/icons.qrc">
           <normaloff>:/icons/document-save.svg</normaloff>:/icons/document-save.svg
         </iconset>
       </property>
