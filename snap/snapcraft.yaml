@@ -65,8 +65,8 @@ parts:
             - libglfw3-dev
             - libgles2-mesa-dev
             - libqt5printsupport5
-            - libpython-dev
-            - python-dev
+            - libpython3-dev
+            - python3-dev
             - libqt5svg5
             - qtbase5-dev
             - dpkg-dev
