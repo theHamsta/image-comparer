@@ -77,8 +77,7 @@ parts:
             - desktop-qt5
             - qt5conf
             - qt5
-            - desktop-gnome-platform
-            - gnome-platform
+
 
     qt5:
          source: git://github.com/ubuntu/snapcraft-desktop-helpers
@@ -88,14 +87,4 @@ parts:
          build-packages:
              - qtbase5-dev
              - dpkg-dev
-
-     gnome-platform:
-         plugin: nil
-         prepare: |
-             echo "deb http://ppa.launchpad.net/ubuntu-desktop/gnome-3-26/ubuntu xenial main" | tee /etc/apt/sources.list.d/gnome-3-26.list
-             apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 399B698EEA9EF163B6F9A0F62CC98497A1231595
-             apt update
-             apt upgrade -yy
-         prime:
-             - -*
 
