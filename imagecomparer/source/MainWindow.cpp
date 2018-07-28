@@ -15,6 +15,7 @@
 #include "HeadUpDisplay.hpp"
 
 #include "SimpleCommandPaletteWidget.hpp"
+#include "FuzzyCommandPaletteEngine.hpp"
 
 using namespace ImageComparer;
 
@@ -148,6 +149,7 @@ MainWindow::MainWindow( QWidget* parent ) : QMainWindow( parent ),
 	ui->mainToolBar->addWidget( empty );
 	m_commandPalette = new SimpleCommandPaletteWidget( this );
 	ui->mainToolBar->addWidget( m_commandPalette );
+	m_commandPalette->setCommandPaletteEngine( new FuzzyCommandPaletteEngine() );
 	m_commandPalette->addActionsFromMenu( ui->menubar );
 
 	// Give m_viewer the focus (or m_commandPalette will handle arrow keys)

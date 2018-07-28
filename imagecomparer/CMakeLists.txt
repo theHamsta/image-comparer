@@ -23,6 +23,7 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/../TinyTIFF/
     ${CMAKE_CURRENT_SOURCE_DIR}/../opencvmatviewer/include
     ${CMAKE_CURRENT_SOURCE_DIR}/../QCommandPalette/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/../QCommandPalette/fuzzy-native/src
     ${CMAKE_CURRENT_SOURCE_DIR}/include/
     ${CMAKE_CURRENT_BINARY_DIR}
     ${Qt5Widgets_INCLUDE_DIRS}
