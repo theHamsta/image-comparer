@@ -158,8 +158,6 @@ MainWindow::MainWindow( QWidget* parent ) : QMainWindow( parent ),
 
 	m_commandPalette->commandPaletteEngine()->addFunctionForDynamicActions( [&]( QString searchQuery ) {
 		QMimeType mime;
-		searchQuery = searchQuery.toLower();
-		QStringList words = searchQuery.split( " " );
 		QList<QAction*> rtn;
 		MatcherOptions options;
 		options.case_sensitive = false;
@@ -171,33 +169,43 @@ MainWindow::MainWindow( QWidget* parent ) : QMainWindow( parent ),
 		std::vector<MatchResult> leftResults = m_leftFileMatcher.findMatches( searchQuery.toStdString(), options );
 
 		for ( auto& result : leftResults ) {
+			try {
 
-			QFileInfo fileInfo( QString::fromStdString( *result.value ) );
+				QFileInfo fileInfo( QString::fromStdString( *result.value ).replace( "Left: ", "" ) );
 
-			QAction* action = new QAction( tr( "Left: Open %1" ).arg( fileInfo.fileName() ), this );
-			QIcon icon = QIcon::fromTheme( m_mimeDb.mimeTypeForFile( fileInfo ).iconName(), QIcon( ":icons/image-png.svg" ) );
-			action->setIcon( icon );
+				QAction* action = new QAction( tr( "Left: Open %1" ).arg( fileInfo.fileName() ), this );
+				QIcon icon = QIcon::fromTheme( m_mimeDb.mimeTypeForFile( fileInfo ).iconName(), QIcon( ":icons/image-png.svg" ) );
+				action->setIcon( icon );
 
-			connect( action, &QAction::triggered, [&]() {
-				this->openFile( fileInfo.absoluteFilePath(), LeftImage );
-			} );
-			rtn.append( action );
+				QString path = fileInfo.absoluteFilePath();
+				connect( action, &QAction::triggered, [ = ]() {
+					this->openFile( path, LeftImage );
+				} );
+				rtn.append( action );
+			} catch ( const std::exception& ex ) {
+				qDebug() <<  ex.what();
+			}
 		}
 
 		std::vector<MatchResult> rightResults = m_rightFileMatcher.findMatches( searchQuery.toStdString(), options );
 
 		for ( auto& result : rightResults ) {
 
-			QFileInfo fileInfo( QString::fromStdString( *result.value ) );
+			try {
+				QFileInfo fileInfo( QString::fromStdString( *result.value ).replace( "Right: ", "" ) ) ;
 
-			QAction* action = new QAction( tr( "Right: Open %1" ).arg( fileInfo.fileName() ), this );
-			QIcon icon = QIcon::fromTheme( m_mimeDb.mimeTypeForFile( fileInfo ).iconName(), QIcon( ":icons/image-png.svg" ) );
-			action->setIcon( icon );
+				QAction* action = new QAction( tr( "Right: Open %1" ).arg( fileInfo.fileName() ), this );
+				QIcon icon = QIcon::fromTheme( m_mimeDb.mimeTypeForFile( fileInfo ).iconName(), QIcon( ":icons/image-png.svg" ) );
+				action->setIcon( icon );
 
-			connect( action, &QAction::triggered, [&]() {
-				this->openFile( fileInfo.absoluteFilePath(), RightImage );
-			} );
-			rtn.append( action );
+				QString path = fileInfo.absoluteFilePath();
+				connect( action, &QAction::triggered, [ = ]() {
+					this->openFile( path, RightImage );
+				} );
+				rtn.append( action );
+			} catch ( const std::exception& ex ) {
+				qDebug() <<  ex.what();
+			}
 		}
 
 		return rtn;
@@ -306,6 +314,7 @@ void MainWindow::dragLeaveEvent( QDragLeaveEvent* event )
 
 void MainWindow::openFile( const QString& file, ImageSide side, bool isReloadOpening )
 {
+	qDebug() << "Try to read" << file;
 	TiffStackReader* reader = ( ( ImageSide::LeftImage == side ) ? &m_leftStack : &m_rightStack );
 	TiffStackReader* otherReader = ( ( ImageSide::RightImage == side ) ? &m_leftStack : &m_rightStack );
 	reader->closeTiff();
@@ -1110,7 +1119,11 @@ void ImageComparer::MainWindow::updateFileInterators( ImageSide side )
 		m_leftFileMatcher.clear();
 
 		for ( auto& fileInfo : m_leftImgFileList ) {
-			m_leftFileMatcher.addCandidate( fileInfo.absoluteFilePath().toStdString() );
+			m_leftFileMatcher.addCandidate( "Left: " + fileInfo.absoluteFilePath().toStdString() );
+
+			if ( m_rightImg.empty() ) {
+				m_rightFileMatcher.addCandidate( "Right: " + fileInfo.absoluteFilePath().toStdString() );
+			}
 		}
 	} else {
 		if ( found ) {
@@ -1123,7 +1136,11 @@ void ImageComparer::MainWindow::updateFileInterators( ImageSide side )
 		m_rightFileMatcher.clear();
 
 		for ( auto& fileInfo : m_rightImgFileList ) {
-			m_rightFileMatcher.addCandidate( fileInfo.absoluteFilePath().toStdString() );
+			m_rightFileMatcher.addCandidate( "Right: " + fileInfo.absoluteFilePath().toStdString() );
+
+			if ( m_leftImg.empty() ) {
+				m_leftFileMatcher.addCandidate( "Left: " + fileInfo.absoluteFilePath().toStdString() );
+			}
 		}
 	}
 
