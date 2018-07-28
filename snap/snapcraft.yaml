@@ -58,7 +58,7 @@ parts:
             - libglfw3-dev
             - libgles2-mesa-dev
             - libqt5printsupport5
-            - libpython-dev
+            - libpython3-dev
             - libqt5svg5
             - qtbase5-dev
             - dpkg-dev
@@ -77,6 +77,7 @@ parts:
             - desktop-qt5
             - qt5conf
             - qt5
+            - python_packages
 
 
     qt5:
@@ -87,4 +88,9 @@ parts:
          build-packages:
              - qtbase5-dev
              - dpkg-dev
+
+    python_packages:
+        plugin: python
+        python-version: python3
+        python-packages: [scikit-image,numpy]
 
