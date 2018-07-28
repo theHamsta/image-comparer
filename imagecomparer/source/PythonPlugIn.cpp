@@ -4,6 +4,8 @@
 
 #include <thread>
 
+#include "PythonPlugIn.hpp"
+#include "pybind11/numpy.h"
 
 PythonPlugIn::PythonPlugIn( py::module& module,  ImageComparer::MainWindow* imagecomparer ) : PlugIn( imagecomparer ), m_pluginModule( module )
 {
@@ -41,12 +43,20 @@ QList<QAction*> PythonPlugIn::actionsBoth()
 		QAction* action = new QAction( QString::fromStdString( m_pluginName ), m_imagecomparer );
 		action->setShortcut( QKeySequence( QString::fromStdString( m_pluginShortcut ) ) );
 		action->setIcon( QIcon::fromTheme( "plugins", QIcon( ":icons/plugins.svg" ) ) );
+
+
 		m_imagecomparer->connect( action, &QAction::triggered, [&]() {
 			std::thread thread( [&]() {
 				if ( PythonIntegration::mutex().try_lock() ) {
 					try {
+						py::array img1 ( py::dtype( "uint8" ), {m_imagecomparer->leftImage().rows, m_imagecomparer->leftImage().cols, 3},  m_imagecomparer->leftImage().data ) ;
+						py::array img2 ( py::dtype( "uint8" ), {m_imagecomparer->rightImage().rows, m_imagecomparer->rightImage().cols, 3},  m_imagecomparer->rightImage().data ) ;
+
+
 						m_pluginModule.attr( "process" )(
+							img1,
 							m_imagecomparer->leftImageFileInfo().absoluteFilePath().toStdString().c_str(),
+							img2,
 							m_imagecomparer->rightImageFileInfo().absoluteFilePath().toStdString().c_str() );
 					} catch ( std::exception& e ) {
 						std::cout << m_imagecomparer->leftImageFileInfo().absoluteFilePath().toStdString().c_str() << std::endl;
@@ -70,6 +80,7 @@ QList<QAction*> PythonPlugIn::actionsLeft()
 {
 
 	if ( m_singleImageProcessing ) {
+
 		QAction* action = new QAction( QString::fromStdString( "Left: " + m_pluginName ), m_imagecomparer );
 		action->setShortcut( QKeySequence( QString::fromStdString( m_pluginShortcutLeft ) ) );
 		action->setIcon( QIcon::fromTheme( "plugins", QIcon( ":icons/plugins.svg" ) ) );
@@ -77,7 +88,9 @@ QList<QAction*> PythonPlugIn::actionsLeft()
 			std::thread thread( [&]() {
 				if ( PythonIntegration::mutex().try_lock() ) {
 					try {
+						py::array img1 ( py::dtype( "uint8" ), {m_imagecomparer->leftImage().cols, m_imagecomparer->leftImage().rows, 3},  m_imagecomparer->leftImage().data ) ;
 						m_pluginModule.attr( "process" )(
+							img1,
 							m_imagecomparer->leftImageFileInfo().absoluteFilePath().toStdString().c_str() );
 					} catch ( std::exception& e ) {
 						qDebug() << e.what();
@@ -106,7 +119,9 @@ QList<QAction*> PythonPlugIn::actionsRight()
 			std::thread thread( [&]() {
 				if ( PythonIntegration::mutex().try_lock() ) {
 					try {
+						py::array img1 ( py::dtype( "uint8" ), {m_imagecomparer->leftImage().cols, m_imagecomparer->leftImage().rows, 3},  m_imagecomparer->leftImage().data ) ;
 						m_pluginModule.attr( "process" )(
+							img1,
 							m_imagecomparer->rightImageFileInfo().absoluteFilePath().toStdString().c_str() );
 					} catch ( std::exception& e ) {
 						qDebug() << e.what();

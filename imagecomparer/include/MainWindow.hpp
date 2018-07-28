@@ -64,6 +64,7 @@ namespace ImageComparer
 			QFileInfo rightImageFileInfo() { return QFileInfo( m_rightImgPath ); }
 			const QFileInfoList& leftImgFileList() const { return m_leftImgFileList; };
 			const QFileInfoList& rightImgFileList() const { return m_rightImgFileList; }
+			void updateDisplay();
 
 		private slots:
 			void on_actionSplitView_triggered();

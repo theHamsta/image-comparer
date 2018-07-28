@@ -1156,3 +1156,9 @@ void ImageComparer::MainWindow::updateFileInterators( ImageSide side )
 	}
 
 }
+
+void MainWindow::updateDisplay()
+{
+	m_viewer->setFirstImage( m_leftImg );
+	m_viewer->setSecondImage( m_rightImg );
+}
