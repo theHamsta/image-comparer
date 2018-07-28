@@ -61,7 +61,8 @@ target_link_libraries(imagecomparerlib
 	pthread
 	)
 
-add_executable(imagecomparer main.cpp)
+add_executable(imagecomparer main.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/icons.qrc )
 
 target_link_libraries( imagecomparer imagecomparerlib )
 
