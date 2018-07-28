@@ -15,11 +15,16 @@ plugs:
         interface: content
         target: $SNAP/usr/share/icons
         default-provider: gtk-common-themes
-    python3:
-        interface: content
-        content: python3
-        target: python
-        default-provider: python36-jamesh
+    # python3:
+    #     interface: content
+    #     content: python3
+    #     target: python
+    #     default-provider: python36-jamesh
+
+hooks:
+    install:
+        plugs:
+        - python3
 
 apps:
     imagecomparer:
@@ -35,6 +40,7 @@ apps:
             - icon-themes
             - gsettings
             - python3
+
 
 parts:
 
