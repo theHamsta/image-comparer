@@ -84,6 +84,7 @@ MainWindow::MainWindow( QWidget* parent ) : QMainWindow( parent ),
 			ui->menuPlugIns->addActions( plugin->actionsBoth() );
 			ui->menu_Left_Image->addActions( plugin->actionsLeft() );
 			ui->menu_Right_Image->addActions( plugin->actionsRight() );
+			qDebug() << "Added module" << QString::fromStdString( plugin->name() );
 		} catch ( std::exception& e ) {
 			qDebug() << QString::fromStdString( e.what() );
 		}

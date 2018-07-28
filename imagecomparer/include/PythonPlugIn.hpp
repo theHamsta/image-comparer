@@ -11,45 +11,48 @@
 #define PYTHONPLUGIN_HPP
 
 #include "PlugIn.hpp"
-#include <boost/python.hpp>
+#include "pybind11/embed.h"
+// #include <boost/python.hpp>
 
 namespace ImageComparer
 {
-class MainWindow;
+	class MainWindow;
 }
+
+namespace py = pybind11;
 
 class PythonPlugIn : public PlugIn
 {
-public:
-	PythonPlugIn( boost::python::object& plugInModule, ImageComparer::MainWindow* imagecomparer );
-	PythonPlugIn( PythonPlugIn && ) = default;
-	PythonPlugIn( const PythonPlugIn& ) = default;
-	PythonPlugIn& operator=( PythonPlugIn && ) = default;
+	public:
+		PythonPlugIn( py::module& module, ImageComparer::MainWindow* imagecomparer );
+		PythonPlugIn( PythonPlugIn&& ) = default;
+		PythonPlugIn( const PythonPlugIn& ) = default;
+		PythonPlugIn& operator=( PythonPlugIn&& ) = default;
 
-	virtual ~PythonPlugIn();
+		virtual ~PythonPlugIn();
 
-	virtual const std::string name() const override;
-	virtual const std::string description() const override;
-	
-	virtual QList<QAction*> actionsLeft() override; 
-	virtual QList<QAction*> actionsRight() override;
-	virtual QList<QAction*> actionsBoth() override;
-	virtual QList<QAction*> actionsNotInMenu() { return QList<QAction*>(); };
-	virtual std::function<QList<QAction*>( const QString& )> dynamicActions()
+		virtual const std::string name() const override;
+		virtual const std::string description() const override;
+
+		virtual QList<QAction*> actionsLeft() override;
+		virtual QList<QAction*> actionsRight() override;
+		virtual QList<QAction*> actionsBoth() override;
+		virtual QList<QAction*> actionsNotInMenu() { return QList<QAction*>(); };
+		virtual std::function<QList<QAction*>( const QString& )> dynamicActions()
 		{ return []( const QString& ) { return QList<QAction*>(); }; }
 
 
 
-private:
-	boost::python::object m_pluginModule;
-	std::string m_pluginName;
-	std::string m_pluginDescription;
-	std::string m_pluginShortcut;
-	std::string m_pluginShortcutLeft;
-	std::string m_pluginShortcutRight;
+	private:
+		py::module m_pluginModule;
+		std::string m_pluginName;
+		std::string m_pluginDescription;
+		std::string m_pluginShortcut;
+		std::string m_pluginShortcutLeft;
+		std::string m_pluginShortcutRight;
 
-	bool m_singleImageProcessing = false;
-	bool m_doubleImageProcessing = false;
+		bool m_singleImageProcessing = false;
+		bool m_doubleImageProcessing = false;
 };
 
 

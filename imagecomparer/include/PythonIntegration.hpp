@@ -10,42 +10,45 @@
 #define PYTHONINTEGRATION_HPP
 
 #include <boost/filesystem.hpp>
-#include <boost/python.hpp>
+#include "pybind11/embed.h"
 #include <mutex>
 
-	
+
+namespace py = pybind11;
 class PythonIntegration
 {
-public:
-	virtual ~PythonIntegration() {
-		s_instance = nullptr;
-	}
+	public:
+		virtual ~PythonIntegration()
+		{
+			s_instance = nullptr;
+		}
 
-	static inline PythonIntegration* instance() {
-		if ( !s_instance )
-			s_instance = new PythonIntegration();
+		static inline PythonIntegration* instance()
+		{
+			if ( !s_instance )
+				s_instance = new PythonIntegration();
 
-		return s_instance;
-	}
+			return s_instance;
+		}
 
-	PythonIntegration( const PythonIntegration& copy ) = delete;
+		PythonIntegration( const PythonIntegration& copy ) = delete;
 
-	std::vector<boost::python::object>& modules() { return m_modules; }
-	static std::mutex& mutex();
+		std::vector<py::module>& modules() { return m_modules; }
+		static std::mutex& mutex();
 
-	void import_path( const boost::filesystem::path& path );
-	void import_module( const boost::filesystem::path& pythonFile );
-	void exec_commands( const std::string& commands );
-	boost::python::object getObject( const std::string& objname ) { return m_mainNamespace[objname.c_str()]; }
+		void import_path( const boost::filesystem::path& path );
+		void import_module( const boost::filesystem::path& pythonFile );
+		void exec_commands( const std::string& commands );
+		// boost::python::object getObject( const std::string& objname ) { return m_mainNamespace[objname.c_str()]; }
 
-protected:
-	std::vector<boost::python::object> m_modules;
-	boost::python::object m_mainNamespace;
+	protected:
+		std::vector<py::module> m_modules;
 
-private:
-	PythonIntegration();
+	private:
+		PythonIntegration();
 
-	static PythonIntegration* s_instance;
+		static PythonIntegration* s_instance;
+		py::scoped_interpreter m_interpreter{};
 };
 
 

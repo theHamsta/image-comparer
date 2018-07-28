@@ -11,8 +11,7 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 find_package( OpenCV REQUIRED )
 find_package( Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS Core Gui Widgets )
 find_package( OpenGL 2.0 REQUIRED )
-find_package( PythonLibs REQUIRED)
-find_package( Boost REQUIRED filesystem system python )
+find_package( Boost REQUIRED filesystem system )
 
 add_definitions("-DWITH_PYTHON")
 include_directories(${PYTHON_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
@@ -51,14 +50,16 @@ add_library( imagecomparerlib
 		${CMAKE_CURRENT_SOURCE_DIR}/icons.qrc
 		)
 target_link_libraries(imagecomparerlib
+PUBLIC
 	${OPENGL_LIBRARIES}
 	${OpenCV_LIBS}
     ${Qt5Widgets_LIBRARIES} 
-    ${PYTHON_LIBRARIES}
 	${Boost_LIBRARIES} 
 	opencvmatviewer
 	qcommandpalette
 	pthread
+	PRIVATE
+		pybind11::embed
 	)
 
 add_definitions(-DDARK_THEME_IMAGECOMPARER)
