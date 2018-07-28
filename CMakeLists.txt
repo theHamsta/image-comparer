@@ -17,6 +17,7 @@ endif()
 add_subdirectory(opencvmatviewer)
 add_subdirectory(imagecomparer)
 add_subdirectory(QCommandPalette)
+add_subdirectory(pybind11)
 
 install( FILES ${CMAKE_CURRENT_SOURCE_DIR}/README.md DESTINATION doc )
 

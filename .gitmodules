@@ -7,3 +7,6 @@
 [submodule "QCommandPalette"]
 	path = QCommandPalette
 	url = https://github.com/theHamsta/QCommandPalette.git
+[submodule "pybind11"]
+	path = pybind11
+	url = https://github.com/pybind/pybind11.git
