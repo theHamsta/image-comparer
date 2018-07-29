@@ -25,6 +25,7 @@ hooks:
     install:
         plugs:
         - python3
+        - python2
 
 apps:
     imagecomparer:
@@ -71,8 +72,8 @@ parts:
             - libglfw3-dev
             - libgles2-mesa-dev
             - libqt5printsupport5
-            - libpython3-dev
-            - python3-dev
+            - libpython-dev
+            - python-dev
             - libqt5svg5
             - qtbase5-dev
             - dpkg-dev
@@ -105,6 +106,6 @@ parts:
 
     pythonpackages:
         plugin: python
-        python-version: python3
+        python-version: python2
         python-packages: [matplotlib,numpy, pydicom]
 
