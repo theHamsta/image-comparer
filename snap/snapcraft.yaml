@@ -69,6 +69,7 @@ parts:
             - libpython-dev
             - python-dev
             - python-tk
+            - python-skimage
             - libqt5svg5
             - qtbase5-dev
             - dpkg-dev
@@ -83,8 +84,6 @@ parts:
             - libgdk-pixbuf2.0-0
             - libqt5svg5 # for loading icon themes which are svg
             - appmenu-qt5
-            - python-tk
-            - python-skimage
         after: 
             - desktop-qt5
             - qt5conf
