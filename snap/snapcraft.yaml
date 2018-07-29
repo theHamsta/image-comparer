@@ -42,7 +42,7 @@ parts:
     imagecomparer:
         plugin: cmake
         source: . 
-        config-flags: 
+        configflags: 
             - -DPYTHON_EXECUTABLE=$SNAP/usr/bin/python3.5m
             - -DPYTHON_LIBRARY=$SNAP/usr/lib/x86_64-linux-gnu/libpython3.5m.so.1
             - -DPYTHON_INCLUDE_DIR=$SNAP/include/python3.5m
