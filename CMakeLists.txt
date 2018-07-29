@@ -14,6 +14,7 @@ if( NOT DOXYGEN_FOUND)
 	set (WITH_DOCUMENTATION OFF )
 endif()
 
+set(PYBIND11_PYTHON_VERSION 3.5)
 
 add_subdirectory(opencvmatviewer)
 add_subdirectory(imagecomparer)

@@ -42,13 +42,13 @@ parts:
     imagecomparer:
         plugin: cmake
         source: . 
-        configflags: 
-            - -DPYTHON_EXECUTABLE=/usr/bin/python3.5m
-            - -DPYTHON_LIBRARY=/usr/lib/x86_64-linux-gnu/libpython3.5m.so.1
-            - -DPYTHON_INCLUDE_DIRS=/include/python3.5m
-            - -DPYBIND11_PYTHON_VERSION=1.4
-            - -DPYTHON_MODULE_EXTENSION=3.5m
-            - -DPYTHONLIBS_FOUND=1
+        # configflags: 
+        #     - -DPYTHON_EXECUTABLE=/usr/bin/python3.5m
+        #     - -DPYTHON_LIBRARY=/usr/lib/x86_64-linux-gnu/libpython3.5m.so.1
+        #     - -DPYTHON_INCLUDE_DIRS=/include/python3.5m
+        #     - -DPYBIND11_PYTHON_VERSION=1.4
+        #     - -DPYTHON_MODULE_EXTENSION=3.5m
+        #     - -DPYTHONLIBS_FOUND=1
         source-type: git
         build-packages:
             - libpng-dev
