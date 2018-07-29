@@ -21,10 +21,6 @@ plugs:
     #     target: python
     #     default-provider: python36-jamesh
 
-hooks:
-    install:
-        plugs:
-        - python2
 
 apps:
     imagecomparer:
@@ -39,7 +35,6 @@ apps:
             - network
             - icon-themes
             - gsettings
-            - python3
 
 
 parts:
