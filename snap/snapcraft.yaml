@@ -66,10 +66,10 @@ parts:
             - libglfw3-dev
             - libgles2-mesa-dev
             - libqt5printsupport5
-            - libpython-dev
-            - python-dev
-            - python-tk
-            - python-skimage
+            - libpython3-dev
+            - python3-dev
+            - python3-tk
+            - python3-skimage
             - libqt5svg5
             - qtbase5-dev
             - dpkg-dev
@@ -102,6 +102,6 @@ parts:
 
     pythonpackages:
         plugin: python
-        python-version: python2
+        python-version: python3
         python-packages: [matplotlib,numpy, pydicom]
 
