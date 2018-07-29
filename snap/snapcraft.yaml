@@ -48,6 +48,7 @@ parts:
             - -DPYTHON_INCLUDE_DIR=$SNAP/include/python3.5m
             - -DPYBIND11_PYTHON_VERSION=1.4
             - -DPYTHON_MODULE_EXTENSION=3.5m
+            - -DPYTHONLIBS_FOUND=1
         source-type: git
         build-packages:
             - libpng-dev
