@@ -14,7 +14,6 @@ if( NOT DOXYGEN_FOUND)
 	set (WITH_DOCUMENTATION OFF )
 endif()
 
-find_package( PythonInterp 3.5 REQUIRED )
 
 add_subdirectory(opencvmatviewer)
 add_subdirectory(imagecomparer)
