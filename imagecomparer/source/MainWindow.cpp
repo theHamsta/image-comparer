@@ -304,7 +304,7 @@ void MainWindow::dragLeaveEvent( QDragLeaveEvent* event )
 
 void MainWindow::openFile( const QString& file, ImageSide side, bool isReloadOpening )
 {
-	m_viewer->headUpDisplay()->showPermanentMessage( "" );
+	m_viewer->headUpDisplay()->showMessage( "" );
 	qDebug() << "Try to read" << file;
 	TiffStackReader* reader = ( ( ImageSide::LeftImage == side ) ? &m_leftStack : &m_rightStack );
 	TiffStackReader* otherReader = ( ( ImageSide::RightImage == side ) ? &m_leftStack : &m_rightStack );
