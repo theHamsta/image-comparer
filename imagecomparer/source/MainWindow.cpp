@@ -1,6 +1,9 @@
 #include "MainWindow.hpp"
 #include "ui_MainWindow.h"
 
+#include "PythonIntegration.hpp"
+#include "PythonPlugIn.hpp"
+
 #include <QSettings>
 #include <QDebug>
 #include <QLayout>
@@ -20,8 +23,6 @@
 
 using namespace ImageComparer;
 
-#include "PythonIntegration.hpp"
-#include "PythonPlugIn.hpp"
 
 #include <exception>
 

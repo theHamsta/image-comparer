@@ -10,7 +10,11 @@
 #define PYTHONINTEGRATION_HPP
 
 #include <boost/filesystem.hpp>
+#pragma push_macro("slots")
+#undef slots
 #include "pybind11/embed.h"
+#pragma pop_macro("slots")
+
 #include <mutex>
 
 

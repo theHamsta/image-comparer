@@ -2,7 +2,10 @@
 #include <iostream>
 
 #include <boost/filesystem.hpp>
+#pragma push_macro("slots")
+#undef slots
 #include "pybind11/eval.h"
+#pragma pop_macro("slots")
 #include <QDebug>
 
 using namespace py::literals;

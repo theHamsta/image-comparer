@@ -5,7 +5,13 @@
 #include <thread>
 
 #include "PythonPlugIn.hpp"
+#pragma push_macro("slots")
+#undef slots
 #include "pybind11/numpy.h"
+
+#include "pybind11/embed.h"
+#pragma pop_macro("slots")
+#include <QDebug>
 
 PythonPlugIn::PythonPlugIn( py::module& module,  ImageComparer::MainWindow* imagecomparer ) : PlugIn( imagecomparer ), m_pluginModule( module )
 {

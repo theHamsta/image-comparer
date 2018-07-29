@@ -10,8 +10,8 @@
 #ifndef PYTHONPLUGIN_HPP
 #define PYTHONPLUGIN_HPP
 
-#include "PlugIn.hpp"
 #include "pybind11/embed.h"
+#include "PlugIn.hpp"
 // #include <boost/python.hpp>
 
 namespace ImageComparer
