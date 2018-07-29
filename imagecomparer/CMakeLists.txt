@@ -70,7 +70,7 @@ add_executable(imagecomparer main.cpp
     qdarkstyle/style.qrc
 		 )
 
-target_link_libraries( imagecomparer imagecomparerlib )
+target_link_libraries( imagecomparer imagecomparerlib ${PYTHON_LIBRARIES})
 
 
 install(TARGETS imagecomparer DESTINATION bin)
