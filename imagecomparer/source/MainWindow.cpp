@@ -6,6 +6,7 @@
 #include <QLayout>
 #include <QMimeType>
 #include <QFile>
+#include <QMessageBox>
 
 #include "SplitView.hpp"
 #include "FadeView.hpp"
@@ -74,21 +75,7 @@ MainWindow::MainWindow( QWidget* parent ) : QMainWindow( parent ),
 		}
 	}
 
-	PythonIntegration* python = PythonIntegration::instance();
-	python->import_path( m_pluginDir.toStdString() );
-
-	for ( auto pluginModule : python->modules() ) {
-		try {
-			PlugIn* plugin = new PythonPlugIn( pluginModule, this );
-			m_plugIns.append( plugin );
-			ui->menuPlugIns->addActions( plugin->actionsBoth() );
-			ui->menu_Left_Image->addActions( plugin->actionsLeft() );
-			ui->menu_Right_Image->addActions( plugin->actionsRight() );
-			qDebug() << "Added module" << QString::fromStdString( plugin->name() );
-		} catch ( std::exception& e ) {
-			qDebug() << QString::fromStdString( e.what() );
-		}
-	}
+	reloadPlugins();
 
 	QAction* openPluginDir = new QAction( tr( "Open Plugin Directory" ), this );
 	openPluginDir->setShortcut( QKeySequence( "Ctrl+Alt+P" ) );
@@ -211,6 +198,7 @@ MainWindow::MainWindow( QWidget* parent ) : QMainWindow( parent ),
 
 		return rtn;
 	} );
+	m_viewer->headUpDisplay()->showPermanentMessage( "Drag two images to the left and the right side of the screen to compare them!" );
 }
 
 MainWindow::~MainWindow()
@@ -315,6 +303,7 @@ void MainWindow::dragLeaveEvent( QDragLeaveEvent* event )
 
 void MainWindow::openFile( const QString& file, ImageSide side, bool isReloadOpening )
 {
+	m_viewer->headUpDisplay()->showPermanentMessage( "" );
 	qDebug() << "Try to read" << file;
 	TiffStackReader* reader = ( ( ImageSide::LeftImage == side ) ? &m_leftStack : &m_rightStack );
 	TiffStackReader* otherReader = ( ( ImageSide::RightImage == side ) ? &m_leftStack : &m_rightStack );
@@ -1161,4 +1150,54 @@ void MainWindow::updateDisplay()
 {
 	m_viewer->setFirstImage( m_leftImg );
 	m_viewer->setSecondImage( m_rightImg );
+}
+
+void MainWindow::on_actionReloadPlugins_triggered()
+{
+	reloadPlugins();
+}
+
+void MainWindow::reloadPlugins()
+{
+
+	PythonIntegration* python = PythonIntegration::instance();
+	python->import_path( m_pluginDir.toStdString() );
+
+	for ( auto a : m_pluginActions ) {
+		delete a;
+	}
+
+	m_pluginActions.clear();
+
+	for ( auto pluginModule : python->modules() ) {
+		try {
+			PlugIn* plugin = new PythonPlugIn( pluginModule, this );
+			m_plugIns.append( plugin );
+			auto actionsBoth =  plugin->actionsBoth();
+			auto actionsLeft =  plugin->actionsLeft();
+			auto actionsRight =  plugin->actionsLeft();
+			ui->menuPlugIns->addActions( actionsBoth );
+			ui->menu_Left_Image->addActions( actionsLeft );
+			ui->menu_Right_Image->addActions( actionsRight );
+
+			for ( auto a : actionsBoth ) {
+				m_pluginActions.push_back( a );
+			}
+
+			for ( auto a : actionsLeft ) {
+				m_pluginActions.push_back( a );
+			}
+
+			for ( auto a : actionsRight ) {
+				m_pluginActions.push_back( a );
+			}
+
+			qDebug() << "Added module" << QString::fromStdString( plugin->name() );
+		} catch ( std::exception& e ) {
+			QMessageBox msgBox;
+			msgBox.setText( QString::fromStdString( e.what() ) );
+			msgBox.exec();
+			qDebug() << QString::fromStdString( e.what() );
+		}
+	}
 }

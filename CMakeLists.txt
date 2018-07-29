@@ -14,6 +14,8 @@ if( NOT DOXYGEN_FOUND)
 	set (WITH_DOCUMENTATION OFF )
 endif()
 
+find_package( PythonInterp REQUIRED )
+
 add_subdirectory(opencvmatviewer)
 add_subdirectory(imagecomparer)
 add_subdirectory(QCommandPalette)

@@ -25,7 +25,6 @@ hooks:
     install:
         plugs:
         - python3
-        - python2
 
 apps:
     imagecomparer:

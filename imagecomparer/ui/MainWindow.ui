@@ -104,6 +104,7 @@
         <property name="title">
           <string>&amp;Plug-Ins</string>
         </property>
+        <!-- <addaction name="actionReloadPlugins"/> -->
       </widget>
       <widget class="QMenu" name="menu_Settings">
         <property name="title">
@@ -239,6 +240,19 @@
       </property>
       <property name="shortcut">
         <string>Ctrl+Q</string>
+      </property>
+    </action>
+    <action name="actionReloadPlugins">
+      <!-- <property name="icon">
+        <iconset theme="application-exit" resource="../gui/icons.qrc">
+          <normaloff>:/icons/application-exit.svg</normaloff>:/icons/application-exit.svg
+        </iconset>
+      </property> -->
+      <property name="text">
+        <string>&amp;Reload Plugins</string>
+      </property>
+      <property name="shortcut">
+        <string>F5</string>
       </property>
     </action>
     <action name="actionNextImageLeftAndRight">

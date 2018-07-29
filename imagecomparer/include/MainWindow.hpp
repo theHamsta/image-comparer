@@ -73,6 +73,7 @@ namespace ImageComparer
 			void on_actionBlendView_triggered();
 
 			void on_actionQuit_triggered();
+			void on_actionReloadPlugins_triggered();
 
 			void on_actionOpenImageLeft_triggered();
 			void on_actionOpenImageRight_triggered();
@@ -114,6 +115,7 @@ namespace ImageComparer
 			virtual void dragLeaveEvent( QDragLeaveEvent* event ) override;
 
 			void readSettings();
+			void reloadPlugins();
 			void writeSetings();
 			void setViewMode( ViewMode viewMode );
 			void moveFilePointer( int delta, ImageSide side );
@@ -146,6 +148,7 @@ namespace ImageComparer
 			MatcherBase m_rightFileMatcher;
 			MatcherBase m_leftFileMatcher;
 			QString m_pluginDir;
+			QList<QAction*> m_pluginActions;
 
 			QFileSystemWatcher m_fileSystemWatcher;
 			QMimeDatabase m_mimeDb;

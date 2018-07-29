@@ -36,6 +36,7 @@ print("Added %s to Python path!"%path)
 				 )", py::globals(), locals );
 
 	directory_iterator eod;
+	std::string errorMessage;
 
 	for ( directory_iterator it( path ); it != eod; ++it ) {
 		if ( is_regular_file( it->path() ) && it->path().extension().string() == ".py" ) {
@@ -58,13 +59,9 @@ void PythonIntegration::import_module( const boost::filesystem::path& pythonFile
 	std::string moduleName = pythonFile.stem().string();
 
 
-	try {
-		py::module module = py::module::import( moduleName.c_str() );
-		m_modules.push_back( module );
+	py::module module = py::module::import( moduleName.c_str() );
+	m_modules.push_back( module );
 
-	} catch ( std::exception& e ) {
-		qDebug() << e.what();
-	}
 }
 
 void PythonIntegration::exec_commands( const std::string& commands )
