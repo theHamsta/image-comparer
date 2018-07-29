@@ -46,6 +46,7 @@ parts:
             - -DPYTHON_EXECUTABLE=$SNAP/usr/bin/python3.5m
             - -DPYTHON_LIBRARY=$SNAP/usr/lib/x86_64-linux-gnu/libpython3.5m.so.1
             - -DPYTHON_INCLUDE_DIR=$SNAP/include/python3.5m
+            - -DPYBIND11_PYTHON_VERSION=1.4
         source-type: git
         build-packages:
             - libpng-dev
