@@ -94,6 +94,9 @@ parts:
             - python3-numpy
         prime:
             - usr/lib/python3/dist-packages/*
+            - bin/*
+            - lib/*
+            - /usr/lib/*
         after: 
             - desktop-qt5
             - qt5conf
