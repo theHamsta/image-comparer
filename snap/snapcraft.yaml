@@ -86,7 +86,6 @@ parts:
             - light-themes
             - shared-mime-info
             - libqt5gui5
-            - libgd-pixbuf2.0-0
             - libqt5svg5 # for loading icon themes which are svg
             - appmenu-qt5
             - python3-tk
