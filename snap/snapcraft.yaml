@@ -94,6 +94,9 @@ parts:
             - python3-matplotlib
             - python3-numpy
             - libblas3
+            - liblapack3
+            - libopenblas-dev
+            - liblapack-dev
         prime:
             - usr/lib/python3/dist-packages/*
             - bin/*
