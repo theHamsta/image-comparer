@@ -110,13 +110,7 @@ parts:
             # - pythonpackages
         install: |
             set -ex
-            for dir in $SNAPCRAFT_PART_INSTALL/usr/lib/*/; do
-                (cd $dir;
-                if [ -f libblas/libblas.so.3.* ]; then
-                cp libblas/libblas.so.3.* libblas.so.3
-                fi)
-            done
-
+            cp $SNAPCRAFT_PART_INSTALL/usr/lib/libblas/*  $SNAPCRAFT_PART_INSTALL/usr/lib/
 
     qt5:
          source: git://github.com/ubuntu/snapcraft-desktop-helpers
