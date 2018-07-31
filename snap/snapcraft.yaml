@@ -110,7 +110,7 @@ parts:
             for dir in $SNAPCRAFT_PART_INSTALL/usr/lib/*/; do
                 (cd $dir;
                 if [ -f libblas/libblas.so.3.* ]; then
-                ln -s libblas/libblas.so.3.* libblas.so.3
+                cp libblas/libblas.so.3.* libblas.so.3
                 fi)
             done
 
