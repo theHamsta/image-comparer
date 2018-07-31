@@ -92,6 +92,7 @@ parts:
             - python3-skimage
             - python3-matplotlib
             - python3-numpy
+            - libblas3
         prime:
             - usr/lib/python3/dist-packages/*
             - bin/*
