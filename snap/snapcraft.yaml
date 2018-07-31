@@ -104,6 +104,14 @@ parts:
             - qt5conf
             - qt5
             # - pythonpackages
+        install: |
+            set -ex
+            for dir in $SNAPCRAFT_PART_INSTALL/usr/lib/*/; do
+                (cd $dir;
+                if [ -f blas/libblas.so.3.* ]; then
+                ln -s blas/libblas.so.3.* libblas.so.3
+                fi)
+            done
 
 
     qt5:
