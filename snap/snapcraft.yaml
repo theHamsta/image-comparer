@@ -111,6 +111,7 @@ parts:
         install: |
             set -ex
             cp $SNAPCRAFT_PART_INSTALL/usr/lib/libblas/*  $SNAPCRAFT_PART_INSTALL/usr/lib/
+            cp $SNAPCRAFT_PART_INSTALL/usr/lib/lapack/*  $SNAPCRAFT_PART_INSTALL/usr/lib/
 
     qt5:
          source: git://github.com/ubuntu/snapcraft-desktop-helpers
