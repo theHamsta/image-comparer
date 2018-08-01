@@ -26,12 +26,12 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/include/
 	${CMAKE_CURRENT_BINARY_DIR}
 	${SNAP}/usr/include/python3.5m
-	${PYTHON_INCLUDE_DIRS}	
+	${PYTHON_INCLUDE_DIRS}
     ${Qt5Widgets_INCLUDE_DIRS}
     ${Qt5Core_INCLUDE_DIRS}
     ${Qt5Gui_INCLUDE_DIRS}
     )
-    
+
 
 aux_source_directory( source SOURCES )
 aux_source_directory( ../TinyTIFF TINYTIFF_SOURCES )
@@ -55,8 +55,8 @@ target_link_libraries(imagecomparerlib
 PUBLIC
 	${OPENGL_LIBRARIES}
 	${OpenCV_LIBS}
-    ${Qt5Widgets_LIBRARIES} 
-	${Boost_LIBRARIES} 
+    ${Qt5Widgets_LIBRARIES}
+	${Boost_LIBRARIES}
 	opencvmatviewer
 	qcommandpalette
 	pthread
@@ -75,3 +75,4 @@ target_link_libraries( imagecomparer imagecomparerlib ${PYTHON_LIBRARIES})
 
 install(TARGETS imagecomparer DESTINATION bin)
 install(FILES imagecomparer.desktop DESTINATION share/applications)
+install(DIRECTORY plugins/* DESTINATION share/imagecomparer/plugins)
