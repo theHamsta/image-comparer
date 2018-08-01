@@ -93,12 +93,14 @@ parts:
             - python3-skimage
             - python3-matplotlib
             - python3-numpy
+            - python3-pil
             - libblas3
             - liblapack3
             - libopenblas-dev
             - liblapack-dev
         prime:
             - usr/lib/python3/dist-packages/*
+            - usr/share/matplotlib/*
             - bin/*
             - lib/*
             - etc/*
