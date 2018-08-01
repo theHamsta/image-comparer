@@ -75,4 +75,4 @@ target_link_libraries( imagecomparer imagecomparerlib ${PYTHON_LIBRARIES})
 
 install(TARGETS imagecomparer DESTINATION bin)
 install(FILES imagecomparer.desktop DESTINATION share/applications)
-install(DIRECTORY plugins/* DESTINATION share/imagecomparer/plugins)
+install(DIRECTORY plugins DESTINATION share/imagecomparer)

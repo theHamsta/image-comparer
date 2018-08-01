@@ -12,6 +12,8 @@
 #include "pybind11/embed.h"
 #pragma pop_macro("slots")
 #include <QDebug>
+#include <iostream>
+
 
 PythonPlugIn::PythonPlugIn( py::module& module,  ImageComparer::MainWindow* imagecomparer ) : PlugIn( imagecomparer ), m_pluginModule( module )
 {
@@ -65,7 +67,6 @@ QList<QAction*> PythonPlugIn::actionsBoth()
 							img2,
 							m_imagecomparer->rightImageFileInfo().absoluteFilePath().toStdString().c_str() );
 					} catch ( std::exception& e ) {
-						std::cout << m_imagecomparer->leftImageFileInfo().absoluteFilePath().toStdString().c_str() << std::endl;
 						qDebug() << e.what();
 					}
 
