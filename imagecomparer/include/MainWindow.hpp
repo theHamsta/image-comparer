@@ -15,6 +15,7 @@
 #include <QActionGroup>
 #include <QFileInfo>
 #include "MatcherBase.h"
+#include "PythonConsole.hpp"
 
 #include <opencv2/opencv.hpp>
 
@@ -54,8 +55,9 @@ namespace ImageComparer
 			Q_OBJECT
 
 		public:
-			explicit MainWindow( QWidget* parent = 0 );
-			~MainWindow();
+			explicit MainWindow( QWidget* parent );
+			MainWindow(): MainWindow( nullptr ) {};
+			virtual ~MainWindow();
 
 			void openFile( const QString& file, ImageComparer::ImageSide side, bool isReloadOpening = false );
 			cv::Mat& leftImage() { return m_leftImg; }
@@ -63,12 +65,15 @@ namespace ImageComparer
 			QFileInfo leftImageFileInfo() { return QFileInfo( m_leftImgPath ); }
 			QFileInfo rightImageFileInfo() { return QFileInfo( m_rightImgPath ); }
 		public slots:
+			void setLeftImage( cv::Mat img, QString title );
+			void setRightImage( cv::Mat img, QString title );
 			const QFileInfoList& leftImgFileList() const { return m_leftImgFileList; };
 			const QFileInfoList& rightImgFileList() const { return m_rightImgFileList; }
 			void updateDisplay();
 
 		private slots:
 			void on_actionSplitView_triggered();
+			void on_actionShowPythonConsole_triggered();
 			void on_actionDiffView_triggered();
 			void on_actionFlickerView_triggered();
 			void on_actionBlendView_triggered();
@@ -156,6 +161,8 @@ namespace ImageComparer
 			QList<PlugIn*> m_plugIns;
 
 			QActionGroup m_viewModeActionGroup;
+			std::unique_ptr<PythonConsole> m_pythonConsole;
+			QDockWidget* m_pythonDockWidget;
 	};
 }
 #endif // MAINWINDOW_HPP

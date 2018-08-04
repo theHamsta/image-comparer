@@ -104,6 +104,7 @@
         <property name="title">
           <string>&amp;Plug-Ins</string>
         </property>
+        <addaction name="actionShowPythonConsole"/>
         <!-- <addaction name="actionReloadPlugins"/> -->
       </widget>
       <widget class="QMenu" name="menu_Settings">
@@ -240,6 +241,19 @@
       </property>
       <property name="shortcut">
         <string>Ctrl+Q</string>
+      </property>
+    </action>
+    <action name="actionShowPythonConsole">
+      <!-- <property name="icon">
+        <iconset theme="application-exit" resource="../gui/icons.qrc">
+          <normaloff>:/icons/application-exit.svg</normaloff>:/icons/application-exit.svg
+        </iconset>
+      </property> -->
+      <property name="text">
+        <string>Show Python &amp;Console</string>
+      </property>
+      <property name="shortcut">
+        <string>F7</string>
       </property>
     </action>
     <action name="actionReloadPlugins">

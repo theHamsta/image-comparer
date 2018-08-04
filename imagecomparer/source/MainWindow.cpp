@@ -9,6 +9,7 @@
 #include <QLayout>
 #include <QMimeType>
 #include <QFile>
+#include <QDockWidget>
 #include <QMessageBox>
 
 #include "SplitView.hpp"
@@ -20,6 +21,7 @@
 
 #include "SimpleCommandPaletteWidget.hpp"
 #include "FuzzyCommandPaletteEngine.hpp"
+#include "EmbeddedModule.hpp"
 
 using namespace ImageComparer;
 
@@ -78,6 +80,12 @@ MainWindow::MainWindow( QWidget* parent ) : QMainWindow( parent ),
 
 	reloadPlugins();
 
+	m_pythonDockWidget = new QDockWidget( tr( "Python Console" ), this );
+	m_pythonConsole = std::make_unique<PythonConsole>( nullptr );
+	m_pythonDockWidget->setLayout( new QBoxLayout( QBoxLayout::Down ) );
+	m_pythonDockWidget->layout()->addWidget( m_pythonConsole.get() );
+	addDockWidget( Qt::BottomDockWidgetArea, m_pythonDockWidget );
+
 	QAction* openPluginDir = new QAction( tr( "Open Plugin Directory" ), this );
 	openPluginDir->setShortcut( QKeySequence( "Ctrl+Alt+P" ) );
 	openPluginDir->setIcon( QIcon::fromTheme( "document-open", QIcon( ":/icons/document-open.svg" ) ) );
@@ -126,7 +134,6 @@ MainWindow::MainWindow( QWidget* parent ) : QMainWindow( parent ),
 	connect( &m_fileSystemWatcher, &QFileSystemWatcher::fileChanged, this, &MainWindow::on_fileChanged );
 	connect( &m_fileSystemWatcher, &QFileSystemWatcher::directoryChanged, this, &MainWindow::on_directoryChanged );
 
-	m_viewer->setFirstImageDescription( "Drag two images onto this window to compare them! One to the left and one to the right." );
 
 	ui->actionSaveLeftImage->setEnabled( false );
 	ui->actionSaveRightImage->setEnabled( false );
@@ -199,7 +206,6 @@ MainWindow::MainWindow( QWidget* parent ) : QMainWindow( parent ),
 
 		return rtn;
 	} );
-	m_viewer->headUpDisplay()->showPermanentMessage( "Drag two images to the left and the right side of the screen to compare them!" );
 }
 
 MainWindow::~MainWindow()
@@ -214,6 +220,7 @@ MainWindow::~MainWindow()
 void MainWindow::closeEvent( QCloseEvent* event )
 {
 	qDebug() << "Main window closed";
+	m_pythonConsole->close();
 	event->accept();
 
 	writeSetings();
@@ -304,7 +311,6 @@ void MainWindow::dragLeaveEvent( QDragLeaveEvent* event )
 
 void MainWindow::openFile( const QString& file, ImageSide side, bool isReloadOpening )
 {
-	m_viewer->headUpDisplay()->showMessage( "" );
 	qDebug() << "Try to read" << file;
 	TiffStackReader* reader = ( ( ImageSide::LeftImage == side ) ? &m_leftStack : &m_rightStack );
 	TiffStackReader* otherReader = ( ( ImageSide::RightImage == side ) ? &m_leftStack : &m_rightStack );
@@ -611,6 +617,14 @@ void MainWindow::updateLabels()
 	if ( m_rightStack.hasFileOpen() ) {
 		m_lastLeftIdx = m_rightStack.currentIdx();
 	}
+
+	if ( m_leftImg.empty() && m_rightImg.empty() ) {
+
+		m_viewer->headUpDisplay()->showPermanentMessage( tr( "Drag two images onto this window to compare them! One to the left and one to the right." ) );
+	} else {
+		m_viewer->headUpDisplay()->showPermanentMessage( "" );
+	}
+
 }
 
 void ImageComparer::MainWindow::on_actionSplitView_triggered()
@@ -1161,44 +1175,72 @@ void MainWindow::on_actionReloadPlugins_triggered()
 void MainWindow::reloadPlugins()
 {
 
-	PythonIntegration* python = PythonIntegration::instance();
-	python->import_path( m_pluginDir.toStdString() );
+	try {
+		PythonIntegration* python = PythonIntegration::instance();
+		python->import_path( m_pluginDir.toStdString() );
+		EmbeddedModule m( this );
 
-	for ( auto a : m_pluginActions ) {
-		delete a;
-	}
-
-	m_pluginActions.clear();
-
-	for ( auto pluginModule : python->modules() ) {
-		try {
-			PlugIn* plugin = new PythonPlugIn( pluginModule, this );
-			m_plugIns.append( plugin );
-			auto actionsBoth =  plugin->actionsBoth();
-			auto actionsLeft =  plugin->actionsLeft();
-			auto actionsRight =  plugin->actionsRight();
-			ui->menuPlugIns->addActions( actionsBoth );
-			ui->menu_Left_Image->addActions( actionsLeft );
-			ui->menu_Right_Image->addActions( actionsRight );
-
-			for ( auto a : actionsBoth ) {
-				m_pluginActions.push_back( a );
-			}
-
-			for ( auto a : actionsLeft ) {
-				m_pluginActions.push_back( a );
-			}
-
-			for ( auto a : actionsRight ) {
-				m_pluginActions.push_back( a );
-			}
-
-			qDebug() << "Added module" << QString::fromStdString( plugin->name() );
-		} catch ( std::exception& e ) {
-			QMessageBox msgBox;
-			msgBox.setText( QString::fromStdString( e.what() ) );
-			msgBox.exec();
-			qDebug() << QString::fromStdString( e.what() );
+		for ( auto a : m_pluginActions ) {
+			delete a;
 		}
+
+		m_pluginActions.clear();
+
+		for ( auto pluginModule : python->modules() ) {
+			try {
+				PlugIn* plugin = new PythonPlugIn( pluginModule, this );
+				m_plugIns.append( plugin );
+				auto actionsBoth =  plugin->actionsBoth();
+				auto actionsLeft =  plugin->actionsLeft();
+				auto actionsRight =  plugin->actionsRight();
+				ui->menuPlugIns->addActions( actionsBoth );
+				ui->menu_Left_Image->addActions( actionsLeft );
+				ui->menu_Right_Image->addActions( actionsRight );
+
+				for ( auto a : actionsBoth ) {
+					m_pluginActions.push_back( a );
+				}
+
+				for ( auto a : actionsLeft ) {
+					m_pluginActions.push_back( a );
+				}
+
+				for ( auto a : actionsRight ) {
+					m_pluginActions.push_back( a );
+				}
+
+				qDebug() << "Added module" << QString::fromStdString( plugin->name() );
+			} catch ( std::exception& e ) {
+				QMessageBox msgBox;
+				msgBox.setText( QString::fromStdString( e.what() ) );
+				msgBox.exec();
+				qDebug() << QString::fromStdString( e.what() );
+			}
+		}
+	} catch ( ... ) {
+		qDebug() << "Could not start internal python interpreter.";
 	}
+
+}
+
+void MainWindow::setLeftImage( cv::Mat img, QString title )
+{
+	m_viewer->setFirstImage( img );
+	m_viewer->setFirstImageDescription( title );
+	m_leftImg = img;
+	updateLabels();
+}
+void MainWindow::setRightImage( cv::Mat img, QString title )
+{
+	m_viewer->setSecondImage( img );
+	m_viewer->setSecondImageDescription( title );
+	m_rightImg = img;
+	updateLabels();
+}
+
+void MainWindow::on_actionShowPythonConsole_triggered()
+{
+	m_pythonDockWidget->setVisible( !m_pythonDockWidget->isVisible() );
+	// m_pythonConsole->show();
+
 }

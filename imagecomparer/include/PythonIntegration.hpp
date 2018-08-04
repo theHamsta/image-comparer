@@ -52,7 +52,7 @@ class PythonIntegration
 		PythonIntegration();
 
 		static PythonIntegration* s_instance;
-		py::scoped_interpreter m_interpreter{};
+		std::unique_ptr<py::scoped_interpreter> m_interpreter;
 };
 
 

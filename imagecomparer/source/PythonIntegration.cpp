@@ -7,6 +7,10 @@
 #include "pybind11/eval.h"
 #pragma pop_macro("slots")
 #include <QDebug>
+#include <thread>
+
+namespace py = pybind11;
+using namespace pybind11::literals;
 
 using namespace py::literals;
 using namespace boost::filesystem;
@@ -14,9 +18,19 @@ using namespace boost::filesystem;
 PythonIntegration* PythonIntegration::s_instance = nullptr;
 std::mutex g_mutex;
 
+
+
 PythonIntegration::PythonIntegration()
 {
 	//Py_Initialize();
+	try {
+		m_interpreter = std::make_unique<py::scoped_interpreter>();
+	} catch ( const std::exception& ) {
+
+	}
+
+	// py::module::import( "imagecomparer" );
+
 
 
 	//object main_module = import( "__main__" );

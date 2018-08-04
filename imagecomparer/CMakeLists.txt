@@ -18,20 +18,6 @@ include_directories(${PYTHON_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 set(CMAKE_AUTORCC ON)
 
 
-include_directories(
-    ${CMAKE_CURRENT_SOURCE_DIR}/../TinyTIFF/
-    ${CMAKE_CURRENT_SOURCE_DIR}/../opencvmatviewer/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/../QCommandPalette/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/../QCommandPalette/fuzzy-native/src
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/
-	${CMAKE_CURRENT_BINARY_DIR}
-	${SNAP}/usr/include/python3.5m
-	${PYTHON_INCLUDE_DIRS}
-    ${Qt5Widgets_INCLUDE_DIRS}
-    ${Qt5Core_INCLUDE_DIRS}
-    ${Qt5Gui_INCLUDE_DIRS}
-    )
-
 
 aux_source_directory( source SOURCES )
 aux_source_directory( ../TinyTIFF TINYTIFF_SOURCES )
@@ -51,6 +37,22 @@ add_library( imagecomparerlib
 		${UI_INCLUDES}
 		${CMAKE_CURRENT_SOURCE_DIR}/icons.qrc
 		)
+target_include_directories(
+	imagecomparerlib
+	PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/../TinyTIFF/
+    ${CMAKE_CURRENT_SOURCE_DIR}/../opencvmatviewer/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/../QCommandPalette/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/../QCommandPalette/fuzzy-native/src
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/
+	${CMAKE_CURRENT_BINARY_DIR}
+	${SNAP}/usr/include/python3.5m
+	${PYTHON_INCLUDE_DIRS}
+    ${Qt5Widgets_INCLUDE_DIRS}
+    ${Qt5Core_INCLUDE_DIRS}
+    ${Qt5Gui_INCLUDE_DIRS}
+    )
+
 target_link_libraries(imagecomparerlib
 PUBLIC
 	${OPENGL_LIBRARIES}
