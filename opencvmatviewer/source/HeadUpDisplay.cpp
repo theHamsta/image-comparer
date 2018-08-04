@@ -93,17 +93,28 @@ void HeadUpDisplay::setRightTextOpposedToMessage( QString rightText )
 void HeadUpDisplay::showMessage( QString messageText )
 {
 	m_timerMessageFadeOut.stop();
-	showLabelMessage();
-	ui->labelMessages->setText( messageText );
-	m_timerMessageFadeOut.start();
+
+	if ( !messageText.isEmpty() ) {
+		showLabelMessage();
+		ui->labelMessages->setText( messageText );
+		m_timerMessageFadeOut.start();
+	} else {
+		hideLabelMessage();
+	}
+
 }
 
 void HeadUpDisplay::showPermanentMessage( QString messageText )
 {
 	m_timerMessageFadeOut.stop();
 	m_timerCalculationFinishedMessageFadeOut.stop();
-	showLabelMessage();
-	ui->labelMessages->setText( messageText );
+
+	if ( !messageText.isEmpty() ) {
+		showLabelMessage();
+		ui->labelMessages->setText( messageText );
+	} else {
+		hideLabelMessage();
+	}
 }
 
 void HeadUpDisplay::on_slider_valueChanged( int value )

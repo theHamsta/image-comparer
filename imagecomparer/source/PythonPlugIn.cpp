@@ -25,6 +25,7 @@ PythonPlugIn::PythonPlugIn( py::module& module,  ImageComparer::MainWindow* imag
 		m_pluginShortcutRight = m_pluginModule.attr( "shortcut_right" ).cast<std::string>();
 		m_singleImageProcessing = m_pluginModule.attr( "enable_processing_of_one_image" ).cast<bool>();
 		m_doubleImageProcessing = m_pluginModule.attr( "enable_processing_of_two_images" ).cast<bool>();
+		m_inExtraThread = m_pluginModule.attr( "in_extra_thread" ).cast<bool>();
 	} catch ( std::exception& e ) {
 		std::cerr << e.what() << std::endl;
 
@@ -123,22 +124,26 @@ QList<QAction*> PythonPlugIn::actionsRight()
 		action->setShortcut( QKeySequence( QString::fromStdString( m_pluginShortcutRight ) ) );
 		action->setIcon( QIcon::fromTheme( "plugins", QIcon( ":icons/plugins.svg" ) ) );
 		m_imagecomparer->connect( action, &QAction::triggered, [&]() {
-			std::thread thread( [&]() {
-				if ( PythonIntegration::mutex().try_lock() ) {
-					try {
-						py::array img1 ( py::dtype( "uint8" ), {m_imagecomparer->leftImage().cols, m_imagecomparer->leftImage().rows, 3},  m_imagecomparer->leftImage().data ) ;
-						m_pluginModule.attr( "process" )(
-							img1,
-							m_imagecomparer->rightImageFileInfo().absoluteFilePath().toStdString().c_str() );
-					} catch ( std::exception& e ) {
-						qDebug() << e.what();
+			std::cout << m_inExtraThread << std::endl;
+
+			if ( m_inExtraThread ) {
+				std::thread thread( [&]() {
+					if ( PythonIntegration::mutex().try_lock() ) {
+						try {
+							py::array img1 ( py::dtype( "uint8" ), {m_imagecomparer->leftImage().cols, m_imagecomparer->leftImage().rows, 3},  m_imagecomparer->leftImage().data ) ;
+							m_pluginModule.attr( "process" )(
+								img1,
+								m_imagecomparer->rightImageFileInfo().absoluteFilePath().toStdString().c_str() );
+						} catch ( std::exception& e ) {
+							qDebug() << e.what();
+						}
+
+						PythonIntegration::mutex().unlock();
 					}
 
-					PythonIntegration::mutex().unlock();
-				}
-
-			} );
-			thread.detach();
+				} );
+				thread.detach();
+			}
 		} );
 
 		return {action};

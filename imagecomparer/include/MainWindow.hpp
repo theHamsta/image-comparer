@@ -62,6 +62,7 @@ namespace ImageComparer
 			cv::Mat& rightImage() { return m_rightImg; }
 			QFileInfo leftImageFileInfo() { return QFileInfo( m_leftImgPath ); }
 			QFileInfo rightImageFileInfo() { return QFileInfo( m_rightImgPath ); }
+		public slots:
 			const QFileInfoList& leftImgFileList() const { return m_leftImgFileList; };
 			const QFileInfoList& rightImgFileList() const { return m_rightImgFileList; }
 			void updateDisplay();

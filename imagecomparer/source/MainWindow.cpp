@@ -1176,7 +1176,7 @@ void MainWindow::reloadPlugins()
 			m_plugIns.append( plugin );
 			auto actionsBoth =  plugin->actionsBoth();
 			auto actionsLeft =  plugin->actionsLeft();
-			auto actionsRight =  plugin->actionsLeft();
+			auto actionsRight =  plugin->actionsRight();
 			ui->menuPlugIns->addActions( actionsBoth );
 			ui->menu_Left_Image->addActions( actionsLeft );
 			ui->menu_Right_Image->addActions( actionsRight );

@@ -53,6 +53,7 @@ class PythonPlugIn : public PlugIn
 
 		bool m_singleImageProcessing = false;
 		bool m_doubleImageProcessing = false;
+		bool m_inExtraThread = true;
 };
 
 

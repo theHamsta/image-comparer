@@ -13,6 +13,7 @@
 #include <string>
 #include <QList>
 #include <QAction>
+#include <QThread>
 #include <functional>
 
 namespace ImageComparer
@@ -44,6 +45,7 @@ class PlugIn
 
 	protected:
 		ImageComparer::MainWindow* m_imagecomparer = nullptr;
+		QThread* m_pluginThread = nullptr;
 
 };
 
