@@ -1,7 +1,6 @@
 #ifndef PYTHONCONSOLE_HPP
 #define PYTHONCONSOLE_HPP
-
-#include <QScrollArea>
+#include <QWidget>
 
 class QTextEdit;
 
@@ -13,7 +12,6 @@ class PythonConsole : public QWidget
 		explicit PythonConsole( QWidget* parent );
 
 	private:
-		QScrollArea* m_qScrollArea;
 		QTextEdit* m_currentTextEdit;
 		QTextEdit* m_outputTextEdit;
 		QString m_lastCommand;

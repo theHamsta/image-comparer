@@ -1240,8 +1240,8 @@ void MainWindow::setRightImage( cv::Mat img, QString title )
 
 void MainWindow::on_actionShowPythonConsole_triggered()
 {
-	// m_pythonConsole->setVisible( !m_pythonConsole->isVisible() );
-	// m_pythonConsole->setVisible( !m_pythonConsole->isVisible() );
-	m_pythonConsole->show();
+	m_pythonConsole->setVisible( !m_pythonConsole->isVisible() );
+	// m_pythonDockWidget->setVisible( !m_pythonDockWidget->isVisible() );
+	// m_pythonConsole->show();
 
 }

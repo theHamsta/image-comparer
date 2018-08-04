@@ -25,19 +25,22 @@ PythonConsole::PythonConsole( QWidget* parent ):
 	m_currentTextEdit = new QTextEdit();
 	m_currentTextEdit->setFont(	fixedFont );
 	m_currentTextEdit->zoomIn( 2 );
+	m_currentTextEdit->setFixedHeight( 15 );
+	m_currentTextEdit->setSizePolicy( QSizePolicy::Expanding,   QSizePolicy::Fixed );
 
 	m_outputTextEdit = new QTextEdit();
 	m_outputTextEdit->setReadOnly( true );
 	m_outputTextEdit->setFont(	fixedFont );
 	m_outputTextEdit->zoomIn( 2 );
-	m_outputTextEdit->setAlignment( Qt::AlignBottom );
+	m_currentTextEdit->setFixedHeight( 40 );
+	m_outputTextEdit->setSizePolicy( QSizePolicy::Expanding,   QSizePolicy::Expanding );
 
 	layout()->addWidget( m_outputTextEdit );
 	layout()->addWidget( m_currentTextEdit );
 	connect( m_currentTextEdit, &QTextEdit::textChanged, this, &PythonConsole::onTextChanged );
 	m_currentTextEdit->setFocus();
 
-	setWindowTitle( tr( "Python Console" ) );
+	setWindowTitle( "Python Console" );
 }
 
 void PythonConsole::onTextChanged()
