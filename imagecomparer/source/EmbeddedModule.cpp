@@ -50,7 +50,7 @@ PYBIND11_EMBEDDED_MODULE( imagecomparer, m )
 			// return std::make_unique<NRRD::Image<float>> ( array.shape()[0], 1, 1, const_cast<float*>( array.data() ) );
 		} else if ( array.ndim() == 2 ) {
 			cv::Mat mat( array.shape()[0], array.shape()[1], CV_32FC1, array.mutable_unchecked<2>().mutable_data( 0, 0 ) );
-			g_imagecomparer->setLeftImage( mat, QString::fromStdString( title ) );
+			g_imagecomparer->setLeftImage( mat.clone(), QString::fromStdString( title ) );
 		}
 
 		if ( array.ndim() == 3 ) {
@@ -69,7 +69,7 @@ PYBIND11_EMBEDDED_MODULE( imagecomparer, m )
 			// return std::make_unique<NRRD::Image<float>> ( array.shape()[0], 1, 1, const_cast<float*>( array.data() ) );
 		} else if ( array.ndim() == 2 ) {
 			cv::Mat mat( array.shape()[0], array.shape()[1], CV_32FC1, array.mutable_unchecked<2>().mutable_data( 0, 0 ) );
-			g_imagecomparer->setRightImage( mat, QString::fromStdString( title ) );
+			g_imagecomparer->setRightImage( mat.clone(), QString::fromStdString( title ) );
 		}
 
 		if ( array.ndim() == 3 ) {

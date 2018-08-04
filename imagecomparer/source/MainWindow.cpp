@@ -80,11 +80,11 @@ MainWindow::MainWindow( QWidget* parent ) : QMainWindow( parent ),
 
 	reloadPlugins();
 
-	m_pythonDockWidget = new QDockWidget( tr( "Python Console" ), this );
+	// m_pythonDockWidget = new QDockWidget( tr( "Python Console" ), this );
 	m_pythonConsole = std::make_unique<PythonConsole>( nullptr );
-	m_pythonDockWidget->setLayout( new QBoxLayout( QBoxLayout::Down ) );
-	m_pythonDockWidget->layout()->addWidget( m_pythonConsole.get() );
-	addDockWidget( Qt::BottomDockWidgetArea, m_pythonDockWidget );
+	// m_pythonDockWidget->setLayout( new QBoxLayout( QBoxLayout::Down ) );
+	// m_pythonDockWidget->layout()->addWidget( m_pythonConsole.get() );
+	// addDockWidget( Qt::BottomDockWidgetArea, m_pythonDockWidget );
 
 	QAction* openPluginDir = new QAction( tr( "Open Plugin Directory" ), this );
 	openPluginDir->setShortcut( QKeySequence( "Ctrl+Alt+P" ) );
@@ -1240,7 +1240,8 @@ void MainWindow::setRightImage( cv::Mat img, QString title )
 
 void MainWindow::on_actionShowPythonConsole_triggered()
 {
-	m_pythonDockWidget->setVisible( !m_pythonDockWidget->isVisible() );
-	// m_pythonConsole->show();
+	// m_pythonConsole->setVisible( !m_pythonConsole->isVisible() );
+	// m_pythonConsole->setVisible( !m_pythonConsole->isVisible() );
+	m_pythonConsole->show();
 
 }

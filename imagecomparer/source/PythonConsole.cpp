@@ -36,6 +36,8 @@ PythonConsole::PythonConsole( QWidget* parent ):
 	layout()->addWidget( m_currentTextEdit );
 	connect( m_currentTextEdit, &QTextEdit::textChanged, this, &PythonConsole::onTextChanged );
 	m_currentTextEdit->setFocus();
+
+	setWindowTitle( tr( "Python Console" ) );
 }
 
 void PythonConsole::onTextChanged()
