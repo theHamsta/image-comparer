@@ -127,7 +127,7 @@ parts:
     pythonpackages:
         plugin: python
         python-version: python3
-        python-packages: [matplotlib,pydicom]
+        python-packages: [pydicom]
         build-packages:
             - libpng-dev
             - libopencv-dev
