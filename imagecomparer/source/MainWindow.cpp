@@ -312,9 +312,9 @@ void MainWindow::dragLeaveEvent( QDragLeaveEvent* event )
 void MainWindow::openFile( const QString& file, ImageSide side, bool isReloadOpening )
 {
 	qDebug() << "Try to read" << file;
-	TiffStackReader* reader = ( ( ImageSide::LeftImage == side ) ? &m_leftStack : &m_rightStack );
-	TiffStackReader* otherReader = ( ( ImageSide::RightImage == side ) ? &m_leftStack : &m_rightStack );
-	reader->closeTiff();
+	FrameStack* reader = ( ( ImageSide::LeftImage == side ) ? m_leftStack.get() : m_rightStack.get() );
+	FrameStack* otherReader = ( ( ImageSide::RightImage == side ) ? m_leftStack.get() : m_rightStack.get() );
+	reader->release();
 	cv::Mat mat = cv::imread( file.toStdString(), cv::IMREAD_COLOR );
 
 	if ( mat.empty() ) {
@@ -323,7 +323,19 @@ void MainWindow::openFile( const QString& file, ImageSide side, bool isReloadOpe
 		if ( file.endsWith( ".tif", Qt::CaseInsensitive ) || file.endsWith( ".tiff", Qt::CaseInsensitive ) ) {
 
 			try {
-				reader->openTiff( file.toStdString().c_str(), isReloadOpening );
+				auto tiffReader = dynamic_cast<TiffStackReader*>( reader );
+
+				if ( tiffReader ) {
+					tiffReader->openTiff( file.toStdString().c_str(), isReloadOpening );
+				} else {
+					if ( side == LeftImage ) {
+						m_leftStack = std::make_shared<TiffStackReader>( file.toStdString().c_str(), ui->actionKeepAllInRam->isChecked() );
+						reader = m_leftStack.get();
+					} else {
+						m_rightStack = std::make_shared<TiffStackReader>( file.toStdString().c_str(), ui->actionKeepAllInRam->isChecked() );
+						reader = m_rightStack.get();
+					}
+				}
 
 				if ( otherReader->hasFileOpen() && otherReader->currentIdx() < reader->numFrames() ) {
 					reader->goToFrame( otherReader->currentIdx() );
@@ -535,26 +547,26 @@ void MainWindow::updateLabels()
 
 	QString leftDimZ;
 
-	if ( m_leftStack.hasFileOpen() ) {
-		leftDimZ = "x" + QString::number( m_leftStack.numFrames() );
+	if ( m_leftStack->hasFileOpen() ) {
+		leftDimZ = "x" + QString::number( m_leftStack->numFrames() );
 	}
 
 	QString rightDimZ;
 
-	if ( m_rightStack.hasFileOpen() ) {
-		rightDimZ = "x" + QString::number( m_rightStack.numFrames() );
+	if ( m_rightStack->hasFileOpen() ) {
+		rightDimZ = "x" + QString::number( m_rightStack->numFrames() );
 	}
 
-	if ( m_leftStack.hasFileOpen() ) {
-		leftFileName += tr( " (%1)" ).arg( m_leftStack.currentIdx() + 1 );
-		dirNameLeft += tr( " (%1)" ).arg( m_leftStack.currentIdx() + 1 );
-		m_viewer->setFirstImageDescription( m_leftImgPath + tr( " (%1/%2)" ).arg( m_leftStack.currentIdx() + 1 ).arg( m_leftStack.numFrames() ) );
+	if ( m_leftStack->hasFileOpen() ) {
+		leftFileName += tr( " (%1)" ).arg( m_leftStack->currentIdx() + 1 );
+		dirNameLeft += tr( " (%1)" ).arg( m_leftStack->currentIdx() + 1 );
+		m_viewer->setFirstImageDescription( m_leftImgPath + tr( " (%1/%2)" ).arg( m_leftStack->currentIdx() + 1 ).arg( m_leftStack->numFrames() ) );
 	}
 
-	if ( m_rightStack.hasFileOpen() ) {
-		rightFileName += tr( " (%1)" ).arg( m_rightStack.currentIdx() + 1 );
-		dirNameRight += tr( " (%1)" ).arg( m_rightStack.currentIdx() + 1 );
-		m_viewer->setSecondImageDescription( m_rightImgPath + tr( " (%1/%2)" ).arg( m_rightStack.currentIdx() + 1 ).arg( m_rightStack.numFrames() ) );
+	if ( m_rightStack->hasFileOpen() ) {
+		rightFileName += tr( " (%1)" ).arg( m_rightStack->currentIdx() + 1 );
+		dirNameRight += tr( " (%1)" ).arg( m_rightStack->currentIdx() + 1 );
+		m_viewer->setSecondImageDescription( m_rightImgPath + tr( " (%1/%2)" ).arg( m_rightStack->currentIdx() + 1 ).arg( m_rightStack->numFrames() ) );
 	}
 
 	if ( leftFileName != rightFileName ) {
@@ -607,15 +619,15 @@ void MainWindow::updateLabels()
 	ui->actionCloseRightImage->setEnabled( !m_rightImg.empty() );
 	ui->actionSaveLeftImage->setEnabled( !m_leftImg.empty() );
 	ui->actionSaveRightImage->setEnabled( !m_rightImg.empty() );
-	ui->actionGoToFrame->setEnabled( m_leftStack.hasFileOpen() || m_rightStack.hasFileOpen() );
-	ui->actionKeepAllInRam->setEnabled( m_leftStack.hasFileOpen() || m_rightStack.hasFileOpen() );
+	ui->actionGoToFrame->setEnabled( m_leftStack->hasFileOpen() || m_rightStack->hasFileOpen() );
+	ui->actionKeepAllInRam->setEnabled( m_leftStack->hasFileOpen() || m_rightStack->hasFileOpen() );
 
-	if ( m_leftStack.hasFileOpen() ) {
-		m_lastLeftIdx = m_leftStack.currentIdx();
+	if ( m_leftStack->hasFileOpen() ) {
+		m_lastLeftIdx = m_leftStack->currentIdx();
 	}
 
-	if ( m_rightStack.hasFileOpen() ) {
-		m_lastLeftIdx = m_rightStack.currentIdx();
+	if ( m_rightStack->hasFileOpen() ) {
+		m_lastLeftIdx = m_rightStack->currentIdx();
 	}
 
 	if ( m_leftImg.empty() && m_rightImg.empty() ) {
@@ -696,18 +708,18 @@ void MainWindow::moveFilePointer( int delta, ImageSide side )
 		return;
 	}
 
-	TiffStackReader* reader = ( ( ImageSide::LeftImage == side ) ? &m_leftStack : &m_rightStack );
+	std::shared_ptr<FrameStack> reader = ( ( ImageSide::LeftImage == side ) ? m_leftStack : m_rightStack );
 	cv::Mat* img = ( ( ImageSide::LeftImage == side ) ? &m_leftImg : &m_rightImg );
 	QString file;
 
 	switch ( side ) {
 		case ImageComparer::LeftImage: {
-			bool doActionOnStack = m_leftStack.hasFileOpen() &&
-								   !( delta == -1 && m_leftStack.currentIdx() == 0 && !m_leftStack.keepAllFramesInRam() ) &&
-								   !( delta == +1 && !m_leftStack.hasMoreFrames() && !m_leftStack.keepAllFramesInRam() );
+			bool doActionOnStack = m_leftStack->hasFileOpen() &&
+								   !( delta == -1 && m_leftStack->currentIdx() == 0 && !m_leftStack->keepAllFramesInRam() ) &&
+								   !( delta == +1 && !m_leftStack->hasMoreFrames() && !m_leftStack->keepAllFramesInRam() );
 
 			if ( !doActionOnStack && !m_leftImgFileList.empty() ) {
-				reader->closeTiff();
+				reader->release();
 
 				if ( delta == 1 && m_leftFileIterator != m_leftImgFileList.end() - 1 ) {
 					m_leftFileIterator++;
@@ -728,12 +740,12 @@ void MainWindow::moveFilePointer( int delta, ImageSide side )
 		}
 
 		case ImageComparer::RightImage: {
-			bool doActionOnStack = m_rightStack.hasFileOpen() &&
-								   !( delta == -1 && m_rightStack.currentIdx() == 0 && !m_rightStack.keepAllFramesInRam() ) &&
-								   !( delta == +1 && !m_rightStack.hasMoreFrames() && !m_rightStack.keepAllFramesInRam() );
+			bool doActionOnStack = m_rightStack->hasFileOpen() &&
+								   !( delta == -1 && m_rightStack->currentIdx() == 0 && !m_rightStack->keepAllFramesInRam() ) &&
+								   !( delta == +1 && !m_rightStack->hasMoreFrames() && !m_rightStack->keepAllFramesInRam() );
 
 			if ( !doActionOnStack && !m_rightImgFileList.empty() ) {
-				reader->closeTiff();
+				reader->release();
 
 				if ( delta == 1 && m_rightFileIterator != m_rightImgFileList.end() - 1 ) {
 					m_rightFileIterator++;
@@ -987,7 +999,7 @@ void MainWindow::on_actionOpenImageRight_triggered()
 void ImageComparer::MainWindow::on_actionCloseLeftImage_triggered()
 {
 	m_leftImg.release();
-	m_leftStack.closeTiff();
+	m_leftStack->release();
 	m_viewer->setFirstImage( m_leftImg );
 
 	ui->actionCloseLeftImage->setEnabled( false );
@@ -1001,7 +1013,7 @@ void ImageComparer::MainWindow::on_actionCloseLeftImage_triggered()
 void ImageComparer::MainWindow::on_actionCloseRightImage_triggered()
 {
 	m_rightImg.release();
-	m_rightStack.closeTiff();
+	m_rightStack->release();
 	m_viewer->setSecondImage( m_rightImg );
 
 	ui->actionCloseRightImage->setEnabled( false );
@@ -1031,15 +1043,15 @@ void ImageComparer::MainWindow::on_actionAbout_triggered()
 
 void ImageComparer::MainWindow::on_actionAdjustBrightness_triggered()
 {
-	if ( m_leftStack.hasFileOpen() ) {
-		m_leftStack.adjustBrightness();
-		m_leftImg = m_leftStack.currentFrame();
+	if ( m_leftStack->hasFileOpen() ) {
+		m_leftStack->adjustBrightness();
+		m_leftImg = m_leftStack->currentFrame();
 		m_viewer->setFirstImage( m_leftImg );
 	}
 
-	if ( m_rightStack.hasFileOpen() ) {
-		m_rightStack.adjustBrightness();
-		m_rightImg = m_rightStack.currentFrame();
+	if ( m_rightStack->hasFileOpen() ) {
+		m_rightStack->adjustBrightness();
+		m_rightImg = m_rightStack->currentFrame();
 		m_viewer->setSecondImage( m_rightImg );
 	}
 }
@@ -1048,8 +1060,8 @@ void ImageComparer::MainWindow::on_actionGoToFrame_triggered()
 {
 	qDebug() << "Action \"actionGoToFrame\" triggered";
 
-	int maxFrames = std::max( m_leftStack.numFrames(), m_rightStack.numFrames() );
-	int defaultVal = std::max( m_leftStack.currentIdx(), m_rightStack.currentIdx() );
+	int maxFrames = std::max( m_leftStack->numFrames(), m_rightStack->numFrames() );
+	int defaultVal = std::max( m_leftStack->currentIdx(), m_rightStack->currentIdx() );
 
 	bool ok;
 	int frameIdx = QInputDialog::getInt( this,
@@ -1062,15 +1074,15 @@ void ImageComparer::MainWindow::on_actionGoToFrame_triggered()
 										 &ok );
 
 	if ( ok ) {
-		if ( m_leftStack.hasFileOpen() ) {
-			m_leftStack.goToFrame( frameIdx - 1 );
-			m_leftImg = m_leftStack.currentFrame();
+		if ( m_leftStack->hasFileOpen() ) {
+			m_leftStack->goToFrame( frameIdx - 1 );
+			m_leftImg = m_leftStack->currentFrame();
 			m_viewer->setFirstImage( m_leftImg );
 		}
 
-		if ( m_rightStack.hasFileOpen() ) {
-			m_rightStack.goToFrame( frameIdx - 1 );
-			m_rightImg = m_rightStack.currentFrame();
+		if ( m_rightStack->hasFileOpen() ) {
+			m_rightStack->goToFrame( frameIdx - 1 );
+			m_rightImg = m_rightStack->currentFrame();
 			m_viewer->setSecondImage( m_rightImg );
 		}
 	}
@@ -1080,8 +1092,8 @@ void ImageComparer::MainWindow::on_actionGoToFrame_triggered()
 
 void ImageComparer::MainWindow::on_actionKeepAllInRam_toggled( bool checked )
 {
-	m_leftStack.setKeepAllFramesInRam( checked );
-	m_rightStack.setKeepAllFramesInRam( checked );
+	m_leftStack->setKeepAllFramesInRam( checked );
+	m_rightStack->setKeepAllFramesInRam( checked );
 }
 
 //void ImageComparer::MainWindow::on_actionSwapImagesLeftRight_triggered()

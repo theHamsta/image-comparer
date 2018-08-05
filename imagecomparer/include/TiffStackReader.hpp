@@ -13,6 +13,7 @@
 #include <string>
 
 #include "tinytiffreader.h"
+#include "FrameStack.hpp"
 #include <opencv2/opencv.hpp>
 
 
@@ -22,7 +23,7 @@
 * and converting the frames into cv::Mats
 *
 */
-class TiffStackReader
+class TiffStackReader : public FrameStack
 {
 	public:
 		TiffStackReader( std::string fileName = "", bool keepAllFramesInRam = false );
@@ -31,21 +32,22 @@ class TiffStackReader
 
 		void openTiff( std::string fileName, bool keepBrightnessAndContrastSettings = false );
 		void closeTiff( bool keepBrightnessAndContrastSettings = false );
-		void previousFrame();
-		void nextFrame();
-		void goToFrame( uint idx );
-		bool hasMoreFrames();
-		bool isOk();
-		void adjustBrightness();
-		void adjustBrightness( float min, float max );
-		inline bool hasFileOpen() const { return m_file !=  nullptr; }
+		void release( bool keepBrightnessAndContrastSettings = false ) override {closeTiff( keepBrightnessAndContrastSettings );} ;
+		void previousFrame() override;
+		void nextFrame() override;
+		void goToFrame( uint idx ) override;
+		bool hasMoreFrames() override;
+		bool isOk() override;
+		void adjustBrightness() override;
+		void adjustBrightness( float min, float max ) override;
+		inline bool hasFileOpen() const override { return m_file !=  nullptr; }
 
-		cv::Mat currentFrame();
-		uint numFrames();
-		uint currentIdx();
-		bool keepAllFramesInRam() const { return m_keepAllFramesInRam; }
+		cv::Mat currentFrame() override;
+		uint numFrames() override;
+		uint currentIdx() override;
+		bool keepAllFramesInRam() const override { return m_keepAllFramesInRam; }
 
-		void setKeepAllFramesInRam( bool inRam );
+		void setKeepAllFramesInRam( bool inRam ) override;
 
 	private:
 		void readCurrentFrame( cv::Mat* dstMat = nullptr );

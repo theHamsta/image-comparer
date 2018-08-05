@@ -138,8 +138,8 @@ namespace ImageComparer
 			cv::Mat m_leftImg;
 			cv::Mat m_rightImg;
 
-			TiffStackReader m_leftStack;
-			TiffStackReader m_rightStack;
+			std::shared_ptr<FrameStack> m_leftStack = std::make_shared<TiffStackReader>();
+			std::shared_ptr<FrameStack> m_rightStack = std::make_shared<TiffStackReader>();;
 			int m_lastLeftIdx = 0;
 			int m_lastRightIdx = 0;
 
