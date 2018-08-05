@@ -22,6 +22,7 @@
 #include "SimpleCommandPaletteWidget.hpp"
 #include "FuzzyCommandPaletteEngine.hpp"
 #include "EmbeddedModule.hpp"
+#include "NumpyStack.hpp"
 
 using namespace ImageComparer;
 
@@ -534,6 +535,7 @@ void MainWindow::setViewMode( ViewMode viewMode )
 void MainWindow::updateLabels()
 {
 	m_viewer->setFirstImageDescription( m_leftImg.empty() ? "" : m_leftImgPath );
+
 	m_viewer->setSecondImageDescription( m_rightImg.empty() ? "" : m_rightImgPath );
 
 	QFileInfo leftInfo( m_leftImg.empty() ? "" : m_leftImgPath );
@@ -1238,18 +1240,45 @@ void MainWindow::reloadPlugins()
 void MainWindow::setLeftImage( cv::Mat img, QString title )
 {
 	m_viewer->setFirstImage( img );
-	m_viewer->setFirstImageDescription( title );
+	m_leftImgPath = title;
 	m_leftImg = img;
+	updateLabels();
+}
+
+void MainWindow::setRightImage( py::array_t<float> img, QString title )
+{
+	m_rightStack = std::static_pointer_cast<FrameStack>( std::make_shared<NumpyStack>( img ) );
+
+	if ( m_rightStack->hasFileOpen() ) {
+		m_rightStack->goToFrame( m_leftStack->currentIdx() );
+	}
+
+	m_rightImg = m_rightStack->currentFrame();
+	m_viewer->setSecondImage( m_rightImg );
+	m_rightImgPath = title;
 	updateLabels();
 }
 void MainWindow::setRightImage( cv::Mat img, QString title )
 {
 	m_viewer->setSecondImage( img );
-	m_viewer->setSecondImageDescription( title );
+	m_rightImgPath = title;
 	m_rightImg = img;
 	updateLabels();
 }
 
+void MainWindow::setLeftImage( py::array_t<float> img, QString title )
+{
+	m_leftStack = std::static_pointer_cast<FrameStack>( std::make_shared<NumpyStack>( img ) );
+
+	if ( m_rightStack->hasFileOpen() ) {
+		m_leftStack->goToFrame( m_rightStack->currentIdx() );
+	}
+
+	m_leftImg = m_leftStack->currentFrame();
+	m_viewer->setFirstImage( m_leftImg );
+	m_leftImgPath = title;
+	updateLabels();
+}
 void MainWindow::on_actionShowPythonConsole_triggered()
 {
 	m_pythonConsole->setVisible( !m_pythonConsole->isVisible() );

@@ -23,11 +23,11 @@ class FrameStack
 		virtual bool isOk() = 0;
 		virtual void adjustBrightness() = 0;
 		virtual void adjustBrightness( float min, float max ) = 0;
-		virtual inline bool hasFileOpen() const = 0;
+		virtual bool hasFileOpen() const = 0;
 
 		virtual cv::Mat currentFrame() = 0;
-		virtual uint numFrames() = 0;
-		virtual uint currentIdx() = 0;
+		virtual uint numFrames() const = 0;
+		virtual uint currentIdx() const = 0;
 		virtual bool keepAllFramesInRam() const = 0;
 
 		virtual void setKeepAllFramesInRam( bool inRam ) = 0;

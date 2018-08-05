@@ -54,9 +54,7 @@ PYBIND11_EMBEDDED_MODULE( imagecomparer, m )
 		}
 
 		if ( array.ndim() == 3 ) {
-			// auto raw_array = array.mutable_unchecked<3>();
-
-			// return std::make_unique<NRRD::Image<float>>( array.shape()[2], array.shape()[1],  array.shape()[0], const_cast<float*>( array.data() ) );
+			g_imagecomparer->setLeftImage( array, QString::fromStdString( title ) );
 		}
 
 
@@ -73,9 +71,7 @@ PYBIND11_EMBEDDED_MODULE( imagecomparer, m )
 		}
 
 		if ( array.ndim() == 3 ) {
-			// auto raw_array = array.mutable_unchecked<3>();
-
-			// return std::make_unique<NRRD::Image<float>>( array.shape()[2], array.shape()[1],  array.shape()[0], const_cast<float*>( array.data() ) );
+			g_imagecomparer->setRightImage( array, QString::fromStdString( title ) );
 		}
 
 

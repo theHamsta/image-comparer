@@ -203,7 +203,7 @@ cv::Mat TiffStackReader::currentFrame()
 	}
 }
 
-uint TiffStackReader::currentIdx()
+uint TiffStackReader::currentIdx() const
 {
 	return m_currentIdx;
 }
@@ -268,7 +268,7 @@ void TiffStackReader::previousFrame()
 }
 
 
-uint TiffStackReader::numFrames()
+uint TiffStackReader::numFrames() const
 {
 	return m_numFrames;
 }

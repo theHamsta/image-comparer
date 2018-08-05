@@ -22,6 +22,15 @@
 #include "AbstractDualViewer.hpp"
 #include "TiffStackReader.hpp"
 
+#pragma push_macro("slots")
+#undef slots
+
+#include <pybind11/numpy.h>
+#pragma pop_macro("slots")
+
+
+namespace py = pybind11;
+
 // TODO: recognize newly created files, ignore deleted files (observe directories)
 
 class SimpleCommandPaletteWidget;
@@ -66,7 +75,9 @@ namespace ImageComparer
 			QFileInfo rightImageFileInfo() { return QFileInfo( m_rightImgPath ); }
 		public slots:
 			void setLeftImage( cv::Mat img, QString title );
+			void setLeftImage( py::array_t<float> img, QString title );
 			void setRightImage( cv::Mat img, QString title );
+			void setRightImage( py::array_t<float> img, QString title );
 			const QFileInfoList& leftImgFileList() const { return m_leftImgFileList; };
 			const QFileInfoList& rightImgFileList() const { return m_rightImgFileList; }
 			void updateDisplay();
@@ -139,7 +150,7 @@ namespace ImageComparer
 			cv::Mat m_rightImg;
 
 			std::shared_ptr<FrameStack> m_leftStack = std::make_shared<TiffStackReader>();
-			std::shared_ptr<FrameStack> m_rightStack = std::make_shared<TiffStackReader>();;
+			std::shared_ptr<FrameStack> m_rightStack = std::make_shared<TiffStackReader>();
 			int m_lastLeftIdx = 0;
 			int m_lastRightIdx = 0;
 

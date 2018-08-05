@@ -43,8 +43,8 @@ class TiffStackReader : public FrameStack
 		inline bool hasFileOpen() const override { return m_file !=  nullptr; }
 
 		cv::Mat currentFrame() override;
-		uint numFrames() override;
-		uint currentIdx() override;
+		uint numFrames() const override;
+		uint currentIdx() const override;
 		bool keepAllFramesInRam() const override { return m_keepAllFramesInRam; }
 
 		void setKeepAllFramesInRam( bool inRam ) override;
