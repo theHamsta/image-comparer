@@ -9,5 +9,6 @@ TODO
 - QProgressIndicator: https://github.com/mojocorp/QProgressIndicator
 - TinyTiff: https://github.com/jkriege2/TinyTIFF.git
 - QDarkStyleSheet: https://github.com/ColinDuquesnoy/QDarkStyleSheet
+- fuzzy-native: https://github.com/hansonw/fuzzy-native.git
 
 See the above files for full license information.
