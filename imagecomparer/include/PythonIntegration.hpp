@@ -42,7 +42,6 @@ class PythonIntegration
 
 		void import_path( const boost::filesystem::path& path );
 		void import_module( const boost::filesystem::path& pythonFile );
-		void exec_commands( const std::string& commands );
 		// boost::python::object getObject( const std::string& objname ) { return m_mainNamespace[objname.c_str()]; }
 
 	protected:

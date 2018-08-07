@@ -81,10 +81,6 @@ void PythonIntegration::import_module( const boost::filesystem::path& pythonFile
 
 }
 
-void PythonIntegration::exec_commands( const std::string& commands )
-{
-	//exec( str( commands.c_str() ), m_mainNamespace );
-}
 std::mutex& PythonIntegration::mutex()
 {
 	return g_mutex;
