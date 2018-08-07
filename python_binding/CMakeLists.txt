@@ -14,3 +14,7 @@ target_link_libraries(_imagecomparer
     PUBLIC
     imagecomparerlib
 )
+
+get_filename_component(PYTHON_LIB_DIR ${PYTHON_LIBRARY} DIRECTORY)
+get_filename_component(PYTHON_EXECUTABLE_NAME ${PYTHON_EXECUTABLE} NAME)
+install( TARGETS _imagecomparer DESTINATION lib/${PYTHON_EXECUTABLE_NAME}/site-packages)
