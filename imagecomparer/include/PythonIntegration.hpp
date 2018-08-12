@@ -42,6 +42,8 @@ class PythonIntegration
 
 		void import_path( const boost::filesystem::path& path );
 		void import_module( const boost::filesystem::path& pythonFile );
+
+		bool failedToStartEmbeddedInterpreter() const { return m_failedToStartEmbeddedInterpreter; }
 		// boost::python::object getObject( const std::string& objname ) { return m_mainNamespace[objname.c_str()]; }
 
 	protected:
@@ -52,6 +54,7 @@ class PythonIntegration
 
 		static PythonIntegration* s_instance;
 		std::unique_ptr<py::scoped_interpreter> m_interpreter;
+		bool m_failedToStartEmbeddedInterpreter = false;
 };
 
 

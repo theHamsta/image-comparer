@@ -22,19 +22,11 @@ std::mutex g_mutex;
 
 PythonIntegration::PythonIntegration()
 {
-	//Py_Initialize();
 	try {
 		m_interpreter = std::make_unique<py::scoped_interpreter>();
 	} catch ( const std::exception& ) {
-
+		m_failedToStartEmbeddedInterpreter = true;
 	}
-
-	// py::module::import( "imagecomparer" );
-
-
-
-	//object main_module = import( "__main__" );
-	//m_mainNamespace = main_module.attr( "__dict__" );
 }
 
 void PythonIntegration::import_path( const boost::filesystem::path& path )

@@ -15,6 +15,48 @@ using namespace pybind11::literals;
 
 ImageComparer::MainWindow* g_imagecomparer;
 
+
+// modified structure necessary as pybind does not allow embedded module in python module
+struct embedded_module_new {
+#if PY_MAJOR_VERSION >= 3
+	using init_t = PyObject * ( * )();
+#else
+	using init_t = void ( * )();
+#endif
+	embedded_module_new( const char* name, init_t init )
+	{
+		if ( !Py_IsInitialized() ) {
+
+			PyImport_AppendInittab( name, init );
+
+		}
+	}
+};
+
+#undef PYBIND11_EMBEDDED_MODULE
+#define PYBIND11_EMBEDDED_MODULE(name, variable)                              \
+	static void PYBIND11_CONCAT(pybind11_init_, name)(pybind11::module &);    \
+	static PyObject PYBIND11_CONCAT(*pybind11_init_wrapper_, name)() {        \
+		auto m = pybind11::module(PYBIND11_TOSTRING(name));                   \
+		try {                                                                 \
+			PYBIND11_CONCAT(pybind11_init_, name)(m);                         \
+			return m.ptr();                                                   \
+		} catch (pybind11::error_already_set &e) {                            \
+			PyErr_SetString(PyExc_ImportError, e.what());                     \
+			return nullptr;                                                   \
+		} catch (const std::exception &e) {                                   \
+			PyErr_SetString(PyExc_ImportError, e.what());                     \
+			return nullptr;                                                   \
+		}                                                                     \
+	}                                                                         \
+	PYBIND11_EMBEDDED_MODULE_IMPL(name)                                       \
+	embedded_module_new name(PYBIND11_TOSTRING(name),           \
+							 PYBIND11_CONCAT(pybind11_init_impl_, name));   \
+	void PYBIND11_CONCAT(pybind11_init_, name)(pybind11::module &variable)
+
+
+
+
 PYBIND11_EMBEDDED_MODULE( imagecomparer, m )
 {
 	py::class_<cv::Mat>( m, "cvMat", py::buffer_protocol() )

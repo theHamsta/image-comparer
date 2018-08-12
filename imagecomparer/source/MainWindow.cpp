@@ -1192,6 +1192,7 @@ void MainWindow::reloadPlugins()
 	try {
 		PythonIntegration* python = PythonIntegration::instance();
 		python->import_path( m_pluginDir.toStdString() );
+
 		EmbeddedModule m( this );
 
 		for ( auto a : m_pluginActions ) {
