@@ -18,7 +18,7 @@ class FrameStack
 		virtual void release( bool keepBrightnessAndContrastSettings = false ) = 0;
 		virtual void previousFrame() = 0;
 		virtual void nextFrame() = 0;
-		virtual void goToFrame( uint idx ) = 0;
+		virtual void goToFrame( int idx ) = 0;
 		virtual bool hasMoreFrames() = 0;
 		virtual bool isOk() = 0;
 		virtual void adjustBrightness() = 0;

@@ -30,7 +30,7 @@ class NumpyStack : public FrameStack
 		virtual void release( bool keepBrightnessAndContrastSettings = false ) override;
 		virtual void previousFrame() override;
 		virtual void nextFrame() override;
-		virtual void goToFrame( uint idx ) override;
+		virtual void goToFrame( int idx ) override;
 		virtual bool hasMoreFrames() override;
 		virtual bool isOk() override;
 		virtual void adjustBrightness() override;

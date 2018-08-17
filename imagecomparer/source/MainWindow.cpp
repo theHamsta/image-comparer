@@ -756,9 +756,11 @@ void MainWindow::moveFilePointer( int delta, ImageSide side )
 
 	switch ( side ) {
 		case ImageComparer::LeftImage: {
-			bool doActionOnStack = m_leftStack->hasFileOpen() &&
-								   !( delta < 0 && m_leftStack->currentIdx() == 0 && !m_leftStack->keepAllFramesInRam() ) &&
-								   !( delta > 0 && !m_leftStack->hasMoreFrames() && !m_leftStack->keepAllFramesInRam() );
+			bool doActionOnStack = m_leftStack->hasFileOpen();
+
+			//  &&
+			// 					   !( delta < 0 && m_leftStack->currentIdx() == 0 && !m_leftStack->keepAllFramesInRam() ) &&
+			// 					   !( delta > 0 && !m_leftStack->hasMoreFrames() && !m_leftStack->keepAllFramesInRam() );
 
 			if ( !doActionOnStack && !m_leftImgFileList.empty() ) {
 				reader->release();
@@ -782,9 +784,11 @@ void MainWindow::moveFilePointer( int delta, ImageSide side )
 		}
 
 		case ImageComparer::RightImage: {
-			bool doActionOnStack = m_rightStack->hasFileOpen() &&
-								   !( delta < 0 && m_rightStack->currentIdx() == 0 && !m_rightStack->keepAllFramesInRam() ) &&
-								   !( delta > 0 && !m_rightStack->hasMoreFrames() && !m_rightStack->keepAllFramesInRam() );
+			bool doActionOnStack = m_rightStack->hasFileOpen();
+
+			// &&
+			// 					   !( delta < 0 && m_rightStack->currentIdx() == 0 && !m_rightStack->keepAllFramesInRam() ) &&
+			// 					   !( delta > 0 && !m_rightStack->hasMoreFrames() && !m_rightStack->keepAllFramesInRam() );
 
 			if ( !doActionOnStack && !m_rightImgFileList.empty() ) {
 				reader->release();
@@ -817,9 +821,9 @@ void MainWindow::moveFilePointer( int delta, ImageSide side )
 			if ( file.endsWith( "tif", Qt::CaseInsensitive ) || file.endsWith( "tiff", Qt::CaseInsensitive ) ) {
 				openFile( file, side );
 
-				if ( delta == -1 && reader->hasFileOpen() ) {
-					reader->goToFrame( reader->numFrames() - 1 );
-				}
+				// if ( delta == -1 && reader->hasFileOpen() ) {
+				// 	reader->goToFrame( reader->numFrames() - 1 );
+				// }
 
 				return;
 			}

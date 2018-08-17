@@ -1,11 +1,12 @@
 #include "NumpyStack.hpp"
+#include <algorithm>
 
 NumpyStack::NumpyStack ( const py::array_t<float>& array ): m_array( array ) {}
 
 void NumpyStack::release( bool /*keepBrightnessAndContrastSettings*/  ) {m_array.release();}
 void  NumpyStack::previousFrame() {if ( m_currentIdx > 0 ) m_currentIdx--;}
 void  NumpyStack::nextFrame() {if ( hasMoreFrames() ) m_currentIdx++;}
-void  NumpyStack::goToFrame( uint idx ) { if ( idx >= 0 && idx < numFrames() ) m_currentIdx = idx;}
+void  NumpyStack::goToFrame( int idx ) {  m_currentIdx = std::min( std::max( idx, 0 ), static_cast<int>( numFrames() ) - 1 );}
 bool  NumpyStack::hasMoreFrames() {return m_currentIdx < numFrames() - 1;}
 bool  NumpyStack::isOk() {return true;}
 void  NumpyStack::adjustBrightness() {}

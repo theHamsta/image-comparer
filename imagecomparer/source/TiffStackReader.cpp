@@ -208,8 +208,12 @@ uint TiffStackReader::currentIdx() const
 	return m_currentIdx;
 }
 
-void TiffStackReader::goToFrame( uint idx )
+void TiffStackReader::goToFrame( int idx )
 {
+	if ( idx < 0 ) {
+		idx = 0;
+	}
+
 	if ( m_keepAllFramesInRam ) {
 		assert( idx < m_numFrames );
 		m_currentIdx = idx;
