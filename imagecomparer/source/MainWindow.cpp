@@ -24,6 +24,8 @@
 #include "EmbeddedModule.hpp"
 #include "NumpyStack.hpp"
 
+#include <QCollator>
+
 using namespace ImageComparer;
 
 
@@ -1112,7 +1114,15 @@ void ImageComparer::MainWindow::on_actionKeepAllInRam_toggled( bool checked )
 void ImageComparer::MainWindow::updateFileInterators( ImageSide side )
 {
 	QFileInfo info( LeftImage == side ? m_leftImgPath : m_rightImgPath );
-	QFileInfoList dirUnfiltered = info.absoluteDir().entryInfoList( QDir::Files, QDir::Name | QDir::LocaleAware );
+	QFileInfoList dirUnfiltered = info.absoluteDir().entryInfoList( QDir::Files, QDir::NoSort ); //Name | QDir::LocaleAware );
+
+	QCollator collator;
+	collator.setNumericMode( true );
+	std::sort( dirUnfiltered.begin(), dirUnfiltered.end(), [&]( const QFileInfo & f1, const QFileInfo & f2 ) {
+		return collator.compare( f1.absoluteFilePath(), f2.absoluteFilePath() ) < 0;
+	} );
+
+
 	QFileInfoList dir;
 
 	for ( QFileInfo& f : dirUnfiltered ) {
