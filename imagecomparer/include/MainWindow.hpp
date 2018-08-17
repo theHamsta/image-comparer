@@ -100,9 +100,11 @@ namespace ImageComparer
 			void on_actionShowMenu_toggled( bool checked );
 
 			void on_actionNextImageLeftAndRight_triggered();
-			void on_actionPreviousImageLeftAndRight_triggered();
+			void on_actionNextFastImageLeftAndRight_triggered();
 			void on_actionNextImageRightOnly_triggered();
 			void on_actionNextImageLeftOnly_triggered();
+			void on_actionPreviousFastImageLeftAndRight_triggered();
+			void on_actionPreviousImageLeftAndRight_triggered();
 			void on_actionPreviousImageRight_triggered();
 			void on_actionPreviousImageLeft_triggered();
 
@@ -120,6 +122,8 @@ namespace ImageComparer
 			void on_actionBilinearInterpolation_triggered();
 			void on_actionAdjustBrightness_triggered();
 			void on_actionGoToFrame_triggered();
+			void on_actionGoToFirstFrame_triggered();
+			void on_actionGoToLastFrame_triggered();
 			void on_actionShowInfoBox_toggled( bool checked );
 
 

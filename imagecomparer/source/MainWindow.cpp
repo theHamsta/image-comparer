@@ -314,6 +314,27 @@ void MainWindow::dragLeaveEvent( QDragLeaveEvent* event )
 
 void MainWindow::openFile( const QString& file, ImageSide side, bool isReloadOpening )
 {
+	if ( QFileInfo( file ).isDir() ) {
+		if ( side == LeftImage ) {
+			m_leftImgPath = file;
+			updateFileInterators( LeftImage );
+
+			if ( m_leftImgFileList.size() ) {
+				openFile( m_leftImgFileList[0].absoluteFilePath(), LeftImage );
+			}
+		} else {
+			m_rightImgPath = file;
+			updateFileInterators( RightImage );
+
+			if ( m_rightImgFileList.size() ) {
+				openFile(  m_rightImgFileList[0].absoluteFilePath(), RightImage );
+			}
+		}
+
+		return;
+	}
+
+
 	qDebug() << "Try to read" << file;
 	FrameStack* reader = ( ( ImageSide::LeftImage == side ) ? m_leftStack.get() : m_rightStack.get() );
 	FrameStack* otherReader = ( ( ImageSide::RightImage == side ) ? m_leftStack.get() : m_rightStack.get() );
@@ -624,6 +645,7 @@ void MainWindow::updateLabels()
 	ui->actionSaveLeftImage->setEnabled( !m_leftImg.empty() );
 	ui->actionSaveRightImage->setEnabled( !m_rightImg.empty() );
 	ui->actionGoToFrame->setEnabled( m_leftStack->hasFileOpen() || m_rightStack->hasFileOpen() );
+	ui->actionGoToFrame->setEnabled( !m_leftImg.empty() || !m_rightImg.empty() );
 	ui->actionKeepAllInRam->setEnabled( m_leftStack->hasFileOpen() || m_rightStack->hasFileOpen() );
 
 	if ( m_leftStack->hasFileOpen() ) {
@@ -675,6 +697,22 @@ void ImageComparer::MainWindow::on_actionNextImageLeftAndRight_triggered()
 	updateLabels();
 }
 
+void ImageComparer::MainWindow::on_actionNextFastImageLeftAndRight_triggered()
+{
+	moveFilePointer( +5, LeftImage );
+	moveFilePointer( +5, RightImage );
+	updateLabels();
+}
+
+void ImageComparer::MainWindow::on_actionPreviousFastImageLeftAndRight_triggered()
+{
+	moveFilePointer( -5, LeftImage );
+	moveFilePointer( -5, RightImage );
+	updateLabels();
+}
+
+
+
 void ImageComparer::MainWindow::on_actionPreviousImageLeftAndRight_triggered()
 {
 	moveFilePointer( -1, LeftImage );
@@ -719,15 +757,15 @@ void MainWindow::moveFilePointer( int delta, ImageSide side )
 	switch ( side ) {
 		case ImageComparer::LeftImage: {
 			bool doActionOnStack = m_leftStack->hasFileOpen() &&
-								   !( delta == -1 && m_leftStack->currentIdx() == 0 && !m_leftStack->keepAllFramesInRam() ) &&
-								   !( delta == +1 && !m_leftStack->hasMoreFrames() && !m_leftStack->keepAllFramesInRam() );
+								   !( delta < 0 && m_leftStack->currentIdx() == 0 && !m_leftStack->keepAllFramesInRam() ) &&
+								   !( delta > 0 && !m_leftStack->hasMoreFrames() && !m_leftStack->keepAllFramesInRam() );
 
 			if ( !doActionOnStack && !m_leftImgFileList.empty() ) {
 				reader->release();
 
-				if ( delta == 1 && m_leftFileIterator != m_leftImgFileList.end() - 1 ) {
+				if ( delta > 0 && m_leftFileIterator != m_leftImgFileList.end() - 1 ) {
 					m_leftFileIterator++;
-				} else if ( delta == -1 && m_leftFileIterator != m_leftImgFileList.begin() ) {
+				} else if ( delta < 0 && m_leftFileIterator != m_leftImgFileList.begin() ) {
 					m_leftFileIterator--;
 				} else {
 					return;
@@ -745,15 +783,15 @@ void MainWindow::moveFilePointer( int delta, ImageSide side )
 
 		case ImageComparer::RightImage: {
 			bool doActionOnStack = m_rightStack->hasFileOpen() &&
-								   !( delta == -1 && m_rightStack->currentIdx() == 0 && !m_rightStack->keepAllFramesInRam() ) &&
-								   !( delta == +1 && !m_rightStack->hasMoreFrames() && !m_rightStack->keepAllFramesInRam() );
+								   !( delta < 0 && m_rightStack->currentIdx() == 0 && !m_rightStack->keepAllFramesInRam() ) &&
+								   !( delta > 0 && !m_rightStack->hasMoreFrames() && !m_rightStack->keepAllFramesInRam() );
 
 			if ( !doActionOnStack && !m_rightImgFileList.empty() ) {
 				reader->release();
 
-				if ( delta == 1 && m_rightFileIterator != m_rightImgFileList.end() - 1 ) {
+				if ( delta > 0 && m_rightFileIterator != m_rightImgFileList.end() - 1 ) {
 					m_rightFileIterator++;
-				} else if ( delta == -1 && m_rightFileIterator != m_rightImgFileList.begin() ) {
+				} else if ( delta < 0 && m_rightFileIterator != m_rightImgFileList.begin() ) {
 					m_rightFileIterator--;
 				} else {
 					return;
@@ -801,8 +839,8 @@ void MainWindow::moveFilePointer( int delta, ImageSide side )
 			if ( reader->hasMoreFrames() ) {
 				reader->nextFrame();
 			}
-		} else if ( delta == -1 && reader->currentIdx() != 0 ) {
-			reader->previousFrame();
+		} else {
+			reader->goToFrame( reader->currentIdx() + delta );
 		}
 
 		*img = reader->currentFrame();
@@ -1094,6 +1132,51 @@ void ImageComparer::MainWindow::on_actionGoToFrame_triggered()
 	updateLabels();
 }
 
+void ImageComparer::MainWindow::on_actionGoToFirstFrame_triggered()
+{
+	qDebug() << "Action \"actionGoToFirstFrame\" triggered";
+
+	if ( m_leftStack->hasFileOpen() ) {
+		m_leftStack->goToFrame( 0 );
+		m_leftImg = m_leftStack->currentFrame();
+		m_viewer->setFirstImage( m_leftImg );
+	} else if ( !m_leftImg.empty() ) {
+		openFile( m_leftImgFileList[0].absoluteFilePath(), LeftImage );
+	}
+
+	if ( m_rightStack->hasFileOpen() ) {
+		m_rightStack->goToFrame( 0 );
+		m_rightImg = m_rightStack->currentFrame();
+		m_viewer->setSecondImage( m_rightImg );
+	} else if ( !m_rightImg.empty() ) {
+		openFile( m_rightImgFileList[0].absoluteFilePath(), RightImage );
+	}
+
+	updateLabels();
+}
+void ImageComparer::MainWindow::on_actionGoToLastFrame_triggered()
+{
+	qDebug() << "Action \"actionGoToLastFrame\" triggered";
+
+	if ( m_leftStack->hasFileOpen() ) {
+		m_leftStack->goToFrame( m_leftStack->numFrames() - 1 );
+		m_leftImg = m_leftStack->currentFrame();
+		m_viewer->setFirstImage( m_leftImg );
+	} else if ( !m_leftImg.empty() ) {
+		openFile( m_leftImgFileList.last().absoluteFilePath(), LeftImage );
+	}
+
+	if ( m_rightStack->hasFileOpen() ) {
+		m_rightStack->goToFrame( m_rightStack->numFrames() - 1 );
+		m_rightImg = m_rightStack->currentFrame();
+		m_viewer->setSecondImage( m_rightImg );
+	} else if ( !m_rightImg.empty() ) {
+		openFile( m_rightImgFileList.last().absoluteFilePath(), RightImage );
+	}
+
+	updateLabels();
+}
+
 void ImageComparer::MainWindow::on_actionKeepAllInRam_toggled( bool checked )
 {
 	m_leftStack->setKeepAllFramesInRam( checked );
@@ -1114,7 +1197,8 @@ void ImageComparer::MainWindow::on_actionKeepAllInRam_toggled( bool checked )
 void ImageComparer::MainWindow::updateFileInterators( ImageSide side )
 {
 	QFileInfo info( LeftImage == side ? m_leftImgPath : m_rightImgPath );
-	QFileInfoList dirUnfiltered = info.absoluteDir().entryInfoList( QDir::Files, QDir::NoSort ); //Name | QDir::LocaleAware );
+	QDir directory = info.isFile() ? info.absoluteDir()  : info.absoluteFilePath();
+	QFileInfoList dirUnfiltered = directory.entryInfoList( QDir::Files, QDir::NoSort ); //Name | QDir::LocaleAware );
 
 	QCollator collator;
 	collator.setNumericMode( true );
@@ -1138,7 +1222,7 @@ void ImageComparer::MainWindow::updateFileInterators( ImageSide side )
 
 	if ( side == LeftImage ) {
 
-		if ( found ) {
+		if ( found || info.isDir() ) {
 			m_leftImgFileList = dir;
 			m_leftFileIterator = findResult;
 		} else {
@@ -1163,7 +1247,7 @@ void ImageComparer::MainWindow::updateFileInterators( ImageSide side )
 
 		// }
 	} else {
-		if ( found ) {
+		if ( found || info.isDir() ) {
 			m_rightImgFileList = dir;
 			m_rightFileIterator = findResult;
 		} else {

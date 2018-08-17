@@ -52,8 +52,12 @@
           <string>&amp;File</string>
         </property>
         <addaction name="actionPreviousImageLeftAndRight"/>
+        <addaction name="actionPreviousFastImageLeftAndRight"/>
         <addaction name="actionNextImageLeftAndRight"/>
+        <addaction name="actionNextFastImageLeftAndRight"/>
         <addaction name="actionGoToFrame"/>
+        <addaction name="actionGoToFirstFrame"/>
+        <addaction name="actionGoToLastFrame"/>
         <addaction name="separator"/>
         <!--    <addaction name="actionSwapLeftRight"/>
     <addaction name="separator"/> -->
@@ -269,6 +273,19 @@
         <string>F5</string>
       </property>
     </action>
+<action name="actionNextFastImageLeftAndRight">
+      <property name="icon">
+        <iconset theme="go-next" resource="../gui/icons.qrc">
+          <normaloff>:/icons/go-next.svg</normaloff>:/icons/go-next.svg
+        </iconset>
+      </property>
+      <property name="text">
+        <string>&amp;Next Image (Left and Right, Fast)</string>
+      </property>
+      <property name="shortcut">
+        <string>Up</string>
+      </property>
+    </action>
     <action name="actionNextImageLeftAndRight">
       <property name="icon">
         <iconset theme="go-next" resource="../gui/icons.qrc">
@@ -280,6 +297,19 @@
       </property>
       <property name="shortcut">
         <string>Right</string>
+      </property>
+    </action>
+    <action name="actionPreviousFastImageLeftAndRight">
+      <property name="icon">
+        <iconset theme="go-previous" resource="../gui/icons.qrc">
+          <normaloff>:/icons/go-previous.svg</normaloff>:/icons/go-previous.svg
+        </iconset>
+      </property>
+      <property name="text">
+        <string>&amp;Previous Image (Left and Right, Fast)</string>
+      </property>
+      <property name="shortcut">
+        <string>Down</string>
       </property>
     </action>
     <action name="actionPreviousImageLeftAndRight">
@@ -533,6 +563,38 @@
       </property>
       <property name="shortcut">
         <string>Ctrl+Shift+C</string>
+      </property>
+    </action>
+    <action name="actionGoToLastFrame">
+      <property name="icon">
+        <iconset theme="dialog-layers" resource="../gui/icons.qrc">
+          <normaloff>:/icons/dialog-layers.svg</normaloff>:/icons/dialog-layers.svg
+        </iconset>
+      </property>
+      <property name="text">
+        <string>&amp;Go to Last Frame</string>
+      </property>
+      <property name="shortcut">
+        <string>End</string>
+      </property>
+      <property name="enabled">
+        <bool>true</bool>
+      </property>
+    </action>
+    <action name="actionGoToFirstFrame">
+      <property name="icon">
+        <iconset theme="dialog-layers" resource="../gui/icons.qrc">
+          <normaloff>:/icons/dialog-layers.svg</normaloff>:/icons/dialog-layers.svg
+        </iconset>
+      </property>
+      <property name="text">
+        <string>&amp;Go to First Frame</string>
+      </property>
+      <property name="shortcut">
+        <string>Home</string>
+      </property>
+      <property name="enabled">
+        <bool>true</bool>
       </property>
     </action>
     <action name="actionGoToFrame">

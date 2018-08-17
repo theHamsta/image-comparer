@@ -8,5 +8,5 @@ Exec=imagecomparer %F
 Icon=image-viewer
 Categories=Graphics;
 Terminal=false
-MimeType=image/gif;image/jpeg;image/png;image/bmp;image/x-portable-bitmap;image/x-portable-pixmap;image/x-xbitmap;image/x-xpixmap;image/tiff;image/jp2
+MimeType=image/gif;image/jpeg;image/png;image/bmp;image/x-portable-bitmap;image/x-portable-pixmap;image/x-xbitmap;image/x-xpixmap;image/tiff;image/jp2;inode/directory;
 X-Desktop-File-Install-Version=0.23
