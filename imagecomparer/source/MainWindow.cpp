@@ -3,6 +3,7 @@
 
 #include "PythonIntegration.hpp"
 #include "PythonPlugIn.hpp"
+#include "PythonFileOpen.hpp"
 
 #include <QSettings>
 #include <QDebug>
@@ -30,7 +31,6 @@ using namespace ImageComparer;
 
 
 #include <exception>
-
 bool isImageByExtension( QFileInfo file )
 {
 	//TODO: do this whith QMimeType.inherits( image)
@@ -55,6 +55,7 @@ void writeImage( std::string fullPath, cv::Mat image )
 		qDebug() << "Error writing file \"" << QString::fromStdString( fullPath ) << "\": " << QString::fromStdString( err.what() ) << endl;
 	}
 }
+
 
 MainWindow::MainWindow( QWidget* parent ) : QMainWindow( parent ),
 	ui( new Ui::MainWindow ),
@@ -370,6 +371,27 @@ void MainWindow::openFile( const QString& file, ImageSide side, bool isReloadOpe
 				qDebug() << "Failed to load image" << file;
 			}
 		}
+
+		else {
+			try {
+				qDebug() << "Loading with Python" << file;
+				auto ndarray = openFilePython( file.toStdString() );
+
+				if ( side == LeftImage ) {
+					setLeftImage( ndarray, file );
+					mat = m_leftImg;
+				} else {
+					setRightImage( ndarray, file );
+					mat = m_rightImg;
+				}
+
+			} catch ( const std::exception& e ) {
+				qDebug() << "Failed to load image with Python" << file;
+				qDebug() << QString::fromStdString( e.what() );
+			}
+
+		}
+
 	} else {
 		qDebug() << "Successfully opened file" << file;
 	}
@@ -756,7 +778,7 @@ void MainWindow::moveFilePointer( int delta, ImageSide side )
 
 	switch ( side ) {
 		case ImageComparer::LeftImage: {
-			bool doActionOnStack = m_leftStack->hasFileOpen();
+			bool doActionOnStack = m_leftStack->hasFileOpen() && m_leftStack->numFrames() > 1;
 
 			//  &&
 			// 					   !( delta < 0 && m_leftStack->currentIdx() == 0 && !m_leftStack->keepAllFramesInRam() ) &&
@@ -784,7 +806,7 @@ void MainWindow::moveFilePointer( int delta, ImageSide side )
 		}
 
 		case ImageComparer::RightImage: {
-			bool doActionOnStack = m_rightStack->hasFileOpen();
+			bool doActionOnStack = m_rightStack->hasFileOpen() && m_leftStack->numFrames() < 1;
 
 			// &&
 			// 					   !( delta < 0 && m_rightStack->currentIdx() == 0 && !m_rightStack->keepAllFramesInRam() ) &&
