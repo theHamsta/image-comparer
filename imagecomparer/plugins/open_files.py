@@ -36,7 +36,6 @@ def open_files(path):
 
     # img = Image.frombuffer(np.frombuffer(
     #     dicom.PixelData, dtype=np.uint8, offset=0x10), 'jpeg2000')
-    print(img.shape)
 
     return img.astype(np.float32)
 
