@@ -12,6 +12,7 @@
 #include <QFile>
 #include <QDockWidget>
 #include <QMessageBox>
+#include <QFileSystemModel>
 
 #include "SplitView.hpp"
 #include "FadeView.hpp"
@@ -35,7 +36,7 @@ bool isImageByExtension( QFileInfo file )
 {
 	//TODO: do this whith QMimeType.inherits( image)
 	QString extension = file.suffix().toLower();
-	return extension == "jpeg" || extension == "jp2" || extension == "jpg" || extension == "ppm" || extension == "bmp" || extension == "tif" || extension == "tiff" || extension == "png";
+	return extension == "jpeg" || extension == "jp2" || extension == "jpg" || extension == "ppm" || extension == "bmp" || extension == "tif" || extension == "tiff" || extension == "png" || extension == "ima" || extension == "dcm";
 }
 
 void writeImage( std::string fullPath, cv::Mat image )
@@ -84,11 +85,14 @@ MainWindow::MainWindow( QWidget* parent ) : QMainWindow( parent ),
 
 	reloadPlugins();
 
+
+
+
 	// m_pythonDockWidget = new QDockWidget( tr( "Python Console" ), this );
-	m_pythonConsole = std::make_unique<PythonConsole>( nullptr );
+	// m_pythonConsole = std::make_unique<PythonConsole>( nullptr );
 	// m_pythonDockWidget->setLayout( new QBoxLayout( QBoxLayout::Down ) );
 	// m_pythonDockWidget->layout()->addWidget( m_pythonConsole.get() );
-	// addDockWidget( Qt::BottomDockWidgetArea, m_pythonDockWidget );
+	// addDockWidget( Qt::LeftDockWidgetArea, m_pythonDockWidget );
 
 	QAction* openPluginDir = new QAction( tr( "Open Plugin Directory" ), this );
 	openPluginDir->setShortcut( QKeySequence( "Ctrl+Alt+P" ) );
@@ -109,8 +113,21 @@ MainWindow::MainWindow( QWidget* parent ) : QMainWindow( parent ),
 	//
 	// 	}
 #endif
+	QFileSystemModel* model =  new QFileSystemModel() ;
+	ui->folderTreeViewLeft->setModel( model );
+	QFileSystemModel* model2 =  new QFileSystemModel() ;
+	ui->folderTreeViewRight->setModel( model2 );
+	QStringList filters;
+	filters << "*.jp2" << "*.jpg" << "*.jpeg" << "*.png" << "*.dcm" << "*.bmp" << "*.jpeg" << "*.IMA" << "*.tif" << "*.tiff";
 
-	// Actions that are also available in Fullscreen Mode by their keyboard shortcuts
+	model->setFilter( QDir::AllEntries | QDir::NoDot | QDir::AllDirs );
+	model->setNameFilters( filters );
+	model2->setFilter( QDir::AllEntries | QDir::NoDot | QDir::AllDirs );
+	model2->setNameFilters( filters );
+
+	connect( ui->folderTreeViewLeft, &QTreeView::clicked, this, &MainWindow::onTreeViewLeftClicked );
+	connect( ui->folderTreeViewRight, &QTreeView::clicked, this, &MainWindow::onTreeViewRightClicked );
+
 	QList<QAction*> actionsToAddToWidget;
 	actionsToAddToWidget.append( ui->menubar->actions() );
 
@@ -223,11 +240,11 @@ MainWindow::~MainWindow()
 
 void MainWindow::closeEvent( QCloseEvent* event )
 {
+	writeSetings();
 	qDebug() << "Main window closed";
 	m_pythonConsole->close();
 	event->accept();
 
-	writeSetings();
 }
 
 void MainWindow::keyReleaseEvent( QKeyEvent* event )
@@ -485,6 +502,8 @@ void MainWindow::readSettings()
 	ui->actionBilinearInterpolation->setChecked( m_linearInterpolationDisplay );
 	ui->actionShowInfoBox->setChecked( settings.value( "showInfoBox", false ).toBool() );
 	ui->actionShowMenu->setChecked( settings.value( "showMenu", true ).toBool() );
+	ui->actionShowFolderViewForLeftImage->setChecked( settings.value( "showFolderViewLeft", false ).toBool() );
+	ui->actionShowFolderViewForRightImage->setChecked( settings.value( "showFolderViewRight", false ).toBool() );
 	ui->actionKeepAllInRam->setChecked( settings.value( "keepAllTiffFramesInRam", false ).toBool() );
 	ui->menubar->setVisible( ui->actionShowMenu->isChecked() );
 }
@@ -505,6 +524,8 @@ void MainWindow::writeSetings()
 	settings.setValue( "showInfoBox", ui->actionShowInfoBox->isChecked() );
 	settings.setValue( "showMenu", ui->actionShowMenu->isChecked() );
 	settings.setValue( "keepAllTiffFramesInRam", ui->actionKeepAllInRam->isChecked() );
+	// settings.setValue( "showFolderViewLeft", ui->actionShowFolderViewForLeftImage->isChecked() );
+	// settings.setValue( "showFolderViewRight", ui->actionShowFolderViewForRightImage->isChecked() );
 }
 
 void MainWindow::setViewMode( ViewMode viewMode )
@@ -579,6 +600,7 @@ void MainWindow::setViewMode( ViewMode viewMode )
 
 void MainWindow::updateLabels()
 {
+
 	m_viewer->setFirstImageDescription( m_leftImg.empty() ? "" : m_leftImgPath );
 
 	m_viewer->setSecondImageDescription( m_rightImg.empty() ? "" : m_rightImgPath );
@@ -588,6 +610,44 @@ void MainWindow::updateLabels()
 
 	QString dirNameLeft = m_leftImgPath.isEmpty() ? "." : leftInfo.absoluteDir().dirName();
 	QString dirNameRight = m_rightImgPath.isEmpty() ? "." : rightInfo.absoluteDir().dirName();
+
+	auto model = dynamic_cast<QFileSystemModel*>( ui->folderTreeViewLeft->model() );
+
+	if ( model ) {
+
+		// m_folderTreeViewLeft->setModel( nullptr );
+		model->setRootPath( leftInfo.absoluteDir().absolutePath() );
+		// emit model->layoutChanged();
+		// m_folderTreeViewLeft->setModel( model );
+		ui->folderTreeViewLeft->scrollTo( model->index( leftInfo.absoluteFilePath() ) );
+		ui->folderTreeViewLeft->selectionModel()->clearSelection();
+		ui->folderTreeViewLeft->selectionModel()->select( model->index( leftInfo.absoluteFilePath() ), QItemSelectionModel::SelectCurrent  );
+		ui->folderTreeViewLeft->setRootIndex( model->index( leftInfo.absoluteDir().absolutePath() ) );
+
+		for ( int i = 1; i < model->columnCount(); i++ ) {
+			ui->folderTreeViewLeft->hideColumn( i );
+		}
+
+	}
+
+	model = dynamic_cast<QFileSystemModel*>( ui->folderTreeViewRight->model() );
+
+	if ( model ) {
+
+		// m_folderTreeViewLeft->setModel( nullptr );
+		model->setRootPath( rightInfo.absoluteDir().absolutePath() );
+		// emit model->layoutChanged();
+		// m_folderTreeViewLeft->setModel( model );
+		ui->folderTreeViewRight->scrollTo( model->index( rightInfo.absoluteFilePath() ) );
+		ui->folderTreeViewRight->selectionModel()->clearSelection();
+		ui->folderTreeViewRight->selectionModel()->select( model->index( rightInfo.absoluteFilePath() ), QItemSelectionModel::SelectCurrent  );
+		ui->folderTreeViewRight->setRootIndex( model->index( rightInfo.absoluteDir().absolutePath() ) );
+
+		for ( int i = 1; i < model->columnCount(); i++ ) {
+			ui->folderTreeViewRight->hideColumn( i );
+		}
+
+	}
 
 	QString leftFileName = m_leftImgPath.isEmpty() ? "." : leftInfo.fileName();
 	QString rightFileName = m_rightImgPath.isEmpty() ? "." : rightInfo.fileName();
@@ -1406,4 +1466,35 @@ void MainWindow::on_actionShowPythonConsole_triggered()
 	// m_pythonDockWidget->setVisible( !m_pythonDockWidget->isVisible() );
 	// m_pythonConsole->show();
 
+}
+
+void MainWindow::onTreeViewLeftClicked( const QModelIndex& idx )
+{
+	auto fsModel = dynamic_cast<QFileSystemModel*>( ui->folderTreeViewLeft->model() );
+
+	if ( fsModel ) {
+		QFileInfo fileInfo = fsModel->fileInfo( idx );
+		openFile( fileInfo.absoluteFilePath(), LeftImage );
+		ui->folderTreeViewLeft->setRootIndex( fsModel->index( fileInfo.absolutePath() ) );
+	}
+}
+
+void MainWindow::onTreeViewRightClicked( const QModelIndex& idx )
+{
+	auto fsModel = dynamic_cast<QFileSystemModel*>( ui->folderTreeViewRight->model() );
+
+	if ( fsModel ) {
+		QFileInfo fileInfo = fsModel->fileInfo( idx );
+		openFile( fileInfo.absoluteFilePath(), RightImage );
+		ui->folderTreeViewLeft->setRootIndex( fsModel->index( fileInfo.absolutePath() ) );
+	}
+}
+void MainWindow::on_actionShowFolderViewForRightImage_triggered()
+{
+	// ui->folderTreeViewDockRight->setVisible( checked );
+	ui->folderTreeViewDockRight->setVisible( !ui->folderTreeViewDockRight->isVisible() );
+}
+void MainWindow::on_actionShowFolderViewForLeftImage_triggered()
+{
+	ui->folderTreeViewDockLeft->setVisible( !ui->folderTreeViewDockLeft->isVisible() );
 }

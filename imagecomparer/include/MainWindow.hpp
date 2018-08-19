@@ -14,6 +14,7 @@
 #include <QMainWindow>
 #include <QActionGroup>
 #include <QFileInfo>
+#include <QTreeView>
 #include "MatcherBase.h"
 #include "PythonConsole.hpp"
 
@@ -125,6 +126,10 @@ namespace ImageComparer
 			void on_actionGoToFirstFrame_triggered();
 			void on_actionGoToLastFrame_triggered();
 			void on_actionShowInfoBox_toggled( bool checked );
+			void on_actionShowFolderViewForRightImage_triggered();
+			void on_actionShowFolderViewForLeftImage_triggered();
+			void onTreeViewLeftClicked( const QModelIndex& idx );
+			void onTreeViewRightClicked( const QModelIndex& idx );
 
 
 		private:
@@ -177,7 +182,6 @@ namespace ImageComparer
 
 			QActionGroup m_viewModeActionGroup;
 			std::unique_ptr<PythonConsole> m_pythonConsole;
-			QDockWidget* m_pythonDockWidget;
 	};
 }
 #endif // MAINWINDOW_HPP
