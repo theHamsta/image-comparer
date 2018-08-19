@@ -179,7 +179,7 @@ MainWindow::MainWindow( QWidget* parent ) : QMainWindow( parent ),
 		MatcherOptions options;
 		options.case_sensitive = false;
 		options.num_threads = 3;
-		options.max_results = 10;
+		options.max_results = 4;
 		options.max_gap = 0;
 		options.record_match_indexes = false;
 
