@@ -167,6 +167,12 @@
    <addaction name="actionShowMenu"/>
   </widget>
   <widget class="QDockWidget" name="folderTreeViewDockLeft">
+   <property name="maximumSize">
+    <size>
+     <width>200</width>
+     <height>524287</height>
+    </size>
+   </property>
    <property name="windowTitle">
     <string>Left I&amp;mage</string>
    </property>
@@ -201,6 +207,12 @@
    </widget>
   </widget>
   <widget class="QDockWidget" name="folderTreeViewDockRight">
+   <property name="maximumSize">
+    <size>
+     <width>200</width>
+     <height>524287</height>
+    </size>
+   </property>
    <property name="windowTitle">
     <string>Rig&amp;ht Image</string>
    </property>

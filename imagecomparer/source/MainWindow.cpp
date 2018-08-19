@@ -114,19 +114,35 @@ MainWindow::MainWindow( QWidget* parent ) : QMainWindow( parent ),
 	// 	}
 #endif
 	QFileSystemModel* model =  new QFileSystemModel() ;
-	ui->folderTreeViewLeft->setModel( model );
 	QFileSystemModel* model2 =  new QFileSystemModel() ;
-	ui->folderTreeViewRight->setModel( model2 );
 	QStringList filters;
 	filters << "*.jp2" << "*.jpg" << "*.jpeg" << "*.png" << "*.dcm" << "*.bmp" << "*.jpeg" << "*.IMA" << "*.tif" << "*.tiff";
 
 	model->setFilter( QDir::AllEntries | QDir::NoDot | QDir::AllDirs );
 	model->setNameFilters( filters );
+	model->setRootPath( QFileInfo( "" ).absoluteDir().absolutePath() );
 	model2->setFilter( QDir::AllEntries | QDir::NoDot | QDir::AllDirs );
 	model2->setNameFilters( filters );
+	model2->setRootPath( QFileInfo( "" ).absoluteDir().absolutePath() );
+
+	ui->folderTreeViewLeft->setModel( model );
+	ui->folderTreeViewRight->setModel( model2 );
+	ui->folderTreeViewLeft->setRootIndex( model->index( QFileInfo( "" ).absoluteDir().absolutePath() ) );
+	ui->folderTreeViewRight->setRootIndex( model2->index( QFileInfo( "" ).absoluteDir().absolutePath() ) );
+
+	for ( int i = 1; i < model->columnCount(); i++ ) {
+		ui->folderTreeViewLeft->hideColumn( i );
+	}
+
+	for ( int i = 1; i < model2->columnCount(); i++ ) {
+		ui->folderTreeViewRight->hideColumn( i );
+	}
 
 	connect( ui->folderTreeViewLeft, &QTreeView::clicked, this, &MainWindow::onTreeViewLeftClicked );
 	connect( ui->folderTreeViewRight, &QTreeView::clicked, this, &MainWindow::onTreeViewRightClicked );
+
+	// emit model->layoutChanged();
+	// m_folderTreeViewLeft->setModel( model );
 
 	QList<QAction*> actionsToAddToWidget;
 	actionsToAddToWidget.append( ui->menubar->actions() );
@@ -142,6 +158,7 @@ MainWindow::MainWindow( QWidget* parent ) : QMainWindow( parent ),
 			this->addAction( action );
 		}
 	}
+
 
 	m_viewModeActionGroup.addAction( ui->actionSplitView );
 	m_viewModeActionGroup.addAction( ui->actionBlendView );
@@ -613,7 +630,7 @@ void MainWindow::updateLabels()
 
 	auto model = dynamic_cast<QFileSystemModel*>( ui->folderTreeViewLeft->model() );
 
-	if ( model ) {
+	if ( model && !m_leftImg.empty() ) {
 
 		// m_folderTreeViewLeft->setModel( nullptr );
 		model->setRootPath( leftInfo.absoluteDir().absolutePath() );
@@ -632,7 +649,7 @@ void MainWindow::updateLabels()
 
 	model = dynamic_cast<QFileSystemModel*>( ui->folderTreeViewRight->model() );
 
-	if ( model ) {
+	if ( model && !m_rightImg.empty() ) {
 
 		// m_folderTreeViewLeft->setModel( nullptr );
 		model->setRootPath( rightInfo.absoluteDir().absolutePath() );
