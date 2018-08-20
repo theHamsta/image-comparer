@@ -67,8 +67,8 @@ MainWindow::MainWindow( QWidget* parent ) : QMainWindow( parent ),
 	ui->statusbar = nullptr;
 
 #ifdef WITH_PYTHON
-	QString root_pluginDir = QCoreApplication::applicationDirPath() + "/../share/imagecomparer/plugins/";
-	m_pluginDir = QDir::homePath() + "/.local/share/imagecomparer/";
+	QString root_pluginDir = QCoreApplication::applicationDirPath() + "/../share/imagecomparer/plugins";
+	m_pluginDir = QDir::homePath() + "/.local/share/imagecomparer/plugins";
 
 	if ( !QDir( m_pluginDir ).exists() ) {
 		QDir::root().mkpath( m_pluginDir );
@@ -78,7 +78,7 @@ MainWindow::MainWindow( QWidget* parent ) : QMainWindow( parent ),
 			QFileInfo pluginFile( iterator.next() );
 
 			if ( pluginFile.isFile() && pluginFile.fileName().endsWith( ".py" ) ) {
-				QFile::copy( pluginFile.absoluteFilePath(), m_pluginDir + pluginFile.baseName() );
+				QFile::copy( pluginFile.absoluteFilePath(), m_pluginDir + "/" + pluginFile.fileName() );
 			}
 		}
 	}
