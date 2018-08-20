@@ -409,15 +409,15 @@ void MainWindow::openFile( const QString& file, ImageSide side, bool isReloadOpe
 		else {
 			try {
 				qDebug() << "Loading with Python" << file;
-				auto ndarray = openFilePython( file.toStdString() );
+				// auto ndarray = openFilePython( file.toStdString() );
 
-				if ( side == LeftImage ) {
-					setLeftImage( ndarray, file );
-					mat = m_leftImg;
-				} else {
-					setRightImage( ndarray, file );
-					mat = m_rightImg;
-				}
+				// if ( side == LeftImage ) {
+				// 	setLeftImage( ndarray, file );
+				// 	mat = m_leftImg;
+				// } else {
+				// 	setRightImage( ndarray, file );
+				// 	mat = m_rightImg;
+				// }
 
 			} catch ( const std::exception& e ) {
 				qDebug() << "Failed to load image with Python" << file;
