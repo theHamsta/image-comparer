@@ -2,7 +2,7 @@
 
 # Image Comparer
 
-TODO
+TODO...
 
 ## Third-party software included in this project
 - Breeze icon theme: https://github.com/KDE/breeze-icons
