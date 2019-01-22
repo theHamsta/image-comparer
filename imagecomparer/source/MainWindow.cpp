@@ -1201,6 +1201,43 @@ void ImageComparer::MainWindow::on_actionAdjustBrightness_triggered()
 	}
 }
 
+void ImageComparer::MainWindow::on_actionAdjustBrightnessAdvanced_triggered()
+{
+
+	float defaultMin = std::min( m_leftStack->contrastMinVal(), m_rightStack->contrastMinVal() );
+	float defaultMax = std::max( m_leftStack->contrastMaxVal(), m_rightStack->contrastMaxVal() );
+
+	bool ok;
+	double minVal = QInputDialog::getDouble( this,
+					tr( "Adjust contrast" ),
+					tr( "Enter the minimum value !" ) ,
+					defaultMin, // default value
+					-100000,				// minVal
+					+100000,
+					1, // step
+					&ok );
+	double maxVal = QInputDialog::getDouble( this,
+					tr( "Adjust contrast" ),
+					tr( "Enter the minimum value !" ) ,
+					defaultMax, // default value
+					-100000,				// minVal
+					+100000,
+					1, // step
+					&ok );
+
+	if ( m_leftStack->hasFileOpen() ) {
+		m_leftStack->adjustBrightness( minVal, maxVal );
+		m_leftImg = m_leftStack->currentFrame();
+		m_viewer->setFirstImage( m_leftImg );
+	}
+
+	if ( m_rightStack->hasFileOpen() ) {
+		m_rightStack->adjustBrightness( minVal, maxVal );
+		m_rightImg = m_rightStack->currentFrame();
+		m_viewer->setSecondImage( m_rightImg );
+	}
+}
+
 void ImageComparer::MainWindow::on_actionGoToFrame_triggered()
 {
 	qDebug() << "Action \"actionGoToFrame\" triggered";

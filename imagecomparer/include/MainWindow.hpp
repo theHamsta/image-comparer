@@ -122,6 +122,7 @@ namespace ImageComparer
 
 			void on_actionBilinearInterpolation_triggered();
 			void on_actionAdjustBrightness_triggered();
+			void on_actionAdjustBrightnessAdvanced_triggered();
 			void on_actionGoToFrame_triggered();
 			void on_actionGoToFirstFrame_triggered();
 			void on_actionGoToLastFrame_triggered();

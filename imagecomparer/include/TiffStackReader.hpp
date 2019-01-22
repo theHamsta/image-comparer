@@ -40,6 +40,8 @@ class TiffStackReader : public FrameStack
 		bool isOk() override;
 		void adjustBrightness() override;
 		void adjustBrightness( float min, float max ) override;
+		float contrastMinVal() const override { return m_min;}
+		float contrastMaxVal() const override { return m_max;}
 		inline bool hasFileOpen() const override { return m_file !=  nullptr; }
 
 		cv::Mat currentFrame() override;

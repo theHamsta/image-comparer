@@ -99,6 +99,7 @@
     <addaction name="separator"/>
     <addaction name="actionBilinearInterpolation"/>
     <addaction name="actionAdjustBrightness"/>
+    <addaction name="actionAdjustBrightnessAdvanced"/>
     <addaction name="separator"/>
     <addaction name="actionShowFullscreen"/>
     <addaction name="actionShowInfoBox"/>
@@ -607,6 +608,18 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+C</string>
+   </property>
+  </action>
+  <action name="actionAdjustBrightnessAdvanced">
+   <property name="icon">
+    <iconset theme="contrast">
+     <normaloff>:/icons/contrast.svg</normaloff>:/icons/contrast.svg</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Adjust brightness...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
    </property>
   </action>
   <action name="actionGoToLastFrame">

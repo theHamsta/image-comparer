@@ -35,6 +35,8 @@ class NumpyStack : public FrameStack
 		virtual bool isOk() override;
 		virtual void adjustBrightness() override;
 		virtual void adjustBrightness( float min, float max ) override;
+		float contrastMinVal() const override { return m_min;}
+		float contrastMaxVal() const override { return m_max;}
 		virtual inline bool hasFileOpen() const override;
 
 		virtual cv::Mat currentFrame() override;
@@ -47,6 +49,9 @@ class NumpyStack : public FrameStack
 	private:
 		py::array_t<float> m_array;
 		int m_currentIdx = 0;
+
+		float m_min = 0.;
+		float m_max = 1.;
 
 };
 

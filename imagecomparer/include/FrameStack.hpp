@@ -32,6 +32,9 @@ class FrameStack
 
 		virtual void setKeepAllFramesInRam( bool inRam ) = 0;
 
+		virtual float contrastMinVal() const = 0;
+		virtual float contrastMaxVal() const = 0;
+
 };
 
 #endif /* FRAMESTACK_HPP */
