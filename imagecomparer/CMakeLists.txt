@@ -41,7 +41,6 @@ target_include_directories(
 	imagecomparerlib
 	PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/../TinyTIFF/
-    ${CMAKE_CURRENT_SOURCE_DIR}/../opencvmatviewer/include
     ${CMAKE_CURRENT_SOURCE_DIR}/../QCommandPalette/include
     ${CMAKE_CURRENT_SOURCE_DIR}/../QCommandPalette/fuzzy-native/src
     ${CMAKE_CURRENT_SOURCE_DIR}/include/
