@@ -37,8 +37,8 @@ class PythonPlugIn : public PlugIn
 		virtual QList<QAction*> actionsLeft() override;
 		virtual QList<QAction*> actionsRight() override;
 		virtual QList<QAction*> actionsBoth() override;
-		virtual QList<QAction*> actionsNotInMenu() { return QList<QAction*>(); };
-		virtual std::function<QList<QAction*>( const QString& )> dynamicActions()
+		virtual QList<QAction*> actionsNotInMenu() override { return QList<QAction*>(); };
+		virtual std::function<QList<QAction*>( const QString& )> dynamicActions() override
 		{ return []( const QString& ) { return QList<QAction*>(); }; }
 
 
