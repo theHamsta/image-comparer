@@ -6,7 +6,7 @@
 class EmbeddedModule
 {
 	public:
-		EmbeddedModule( ImageComparer::MainWindow* imagecomparer );
+		EmbeddedModule( ImageComparer::MainWindow* imagecomparer )  {};
 		EmbeddedModule( EmbeddedModule&& ) = default;
 		EmbeddedModule( const EmbeddedModule& ) = default;
 		EmbeddedModule& operator=( EmbeddedModule&& ) = default;

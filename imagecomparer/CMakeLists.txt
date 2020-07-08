@@ -13,7 +13,7 @@ find_package( Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS Core Gui Widgets 
 find_package( OpenGL 2.0 REQUIRED )
 find_package( Boost REQUIRED filesystem system )
 
-add_definitions("-DWITH_PYTHON")
+#add_definitions("-DWITH_PYTHON")
 include_directories(${PYTHON_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 set(CMAKE_AUTORCC ON)
 
@@ -71,7 +71,7 @@ add_executable(imagecomparer main.cpp
     qdarkstyle/style.qrc
 		 )
 
-target_link_libraries( imagecomparer imagecomparerlib ${PYTHON_LIBRARIES})
+target_link_libraries( imagecomparer imagecomparerlib)
 
 
 install(TARGETS imagecomparer DESTINATION bin)
